@@ -1,0 +1,2563 @@
+﻿<Window x:Class="ComputerComplectorAdministrativeTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ComputerComplectorAdministrativeTool"
+        mc:Ignorable="d"
+        Title="Computer Complector Administrative Tool" 
+        Height="768" 
+        Width="1366" 
+        Background="#FF252526" 
+        Foreground="White" 
+        FontSize="16" 
+        WindowState="Maximized" 
+        FontFamily="Microsoft Sans Serif" 
+        WindowStyle="None">
+	<Window.Resources>
+
+		<Storyboard x:Key="LoadingCircle">
+			<ThicknessAnimationUsingKeyFrames
+                                            Storyboard.TargetProperty="BorderThickness"
+                                            Duration="0:0:0.5" RepeatBehavior="Forever">
+				<EasingThicknessKeyFrame KeyTime="0%" Value="3,3,0,0"/>
+				<EasingThicknessKeyFrame KeyTime="25%" Value="0,3,3,0"/>
+				<EasingThicknessKeyFrame KeyTime="50%" Value="0,0,3,3"/>
+				<EasingThicknessKeyFrame KeyTime="75%" Value="3,0,0,3"/>
+				<EasingThicknessKeyFrame KeyTime="100%" Value="3,3,0,0"/>
+			</ThicknessAnimationUsingKeyFrames>
+		</Storyboard>
+
+		<!--#region Effects-->
+
+		<DropShadowEffect 
+			x:Key="NotHover" 
+			ShadowDepth="0" 
+			Color="#FFDEFCFF" 
+			BlurRadius="10"/>
+		<DropShadowEffect 
+			x:Key="HoverImg" 
+			ShadowDepth="0" 
+			Color="#FFDEFCFF" 
+			BlurRadius="40"/>
+		<DropShadowEffect 
+			x:Key="HoverLabel" 
+			ShadowDepth="0" 
+			Color="#FFDEFCFF" 
+			BlurRadius="20"/>
+
+		<DropShadowEffect 
+			x:Key="SelectedImg" 
+			ShadowDepth="0" 
+			Color="#FF46FF00" 
+			BlurRadius="40"/>
+		<DropShadowEffect 
+			x:Key="SelectedItem" 
+			ShadowDepth="0" 
+			Color="#AA99FF00" 
+			BlurRadius="40"/>
+		<DropShadowEffect 
+			x:Key="SelectedLabel" 
+			ShadowDepth="0" 
+			Color="#FF46FF00" 
+			BlurRadius="20"/>
+
+		<DropShadowEffect 
+			x:Key="IncompatibleItem" 
+			ShadowDepth="0" 
+			Color="#AAFF9900" 
+			BlurRadius="40"/>
+
+		<!--#endregion-->
+
+		<!--#region Color Brushes-->
+
+		<SolidColorBrush 
+			x:Key="NotSelected" 
+			Color="#FF00E8FF"/>
+		<SolidColorBrush 
+			x:Key="Selected" 
+			Color="#FF46FF00"/>
+
+		<!--#endregion-->
+
+		<!--#region Control Templates-->
+
+		<ControlTemplate 
+			x:Key="flatListBoxItem" 
+			TargetType="ListBoxItem">
+			<Border 
+				Width="{TemplateBinding Width}"
+				Height="{TemplateBinding Height}"
+				Background="{TemplateBinding Background}"
+				BorderBrush="{TemplateBinding BorderBrush}"
+				BorderThickness="{TemplateBinding BorderThickness}">
+				<ContentPresenter 
+					HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+					VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+					TextElement.Foreground="{TemplateBinding Foreground}"
+					TextElement.FontFamily="{TemplateBinding FontFamily}"
+					TextElement.FontSize="{TemplateBinding FontSize}"
+					TextElement.FontStretch="{TemplateBinding FontStretch}"
+					TextElement.FontWeight="{TemplateBinding FontWeight}"/>
+			</Border>
+		</ControlTemplate>
+
+		<ControlTemplate 
+			x:Key="flatBtn" 
+			TargetType="Button">
+			<Border 
+				Width="{TemplateBinding Width}"
+				Height="{TemplateBinding Height}"
+				Background="{TemplateBinding Background}"
+				BorderBrush="{TemplateBinding BorderBrush}"
+				BorderThickness="{TemplateBinding BorderThickness}">
+				<ContentPresenter 
+					HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                    TextElement.Foreground="{TemplateBinding Foreground}"
+                    TextElement.FontFamily="{TemplateBinding FontFamily}"
+                    TextElement.FontSize="{TemplateBinding FontSize}"
+                    TextElement.FontStretch="{TemplateBinding FontStretch}"
+                    TextElement.FontWeight="{TemplateBinding FontWeight}"/>
+			</Border>
+		</ControlTemplate>
+
+		<ControlTemplate 
+			x:Key="flatRoundedBtn" 
+			TargetType="Button">
+			<Border 
+				Width="{TemplateBinding Width}"
+				Height="{TemplateBinding Height}"
+				Background="{TemplateBinding Background}"
+				BorderBrush="{TemplateBinding BorderBrush}"
+				BorderThickness="{TemplateBinding BorderThickness}"
+				CornerRadius="20">
+				<ContentPresenter 
+					HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                    TextElement.Foreground="{TemplateBinding Foreground}"
+                    TextElement.FontFamily="{TemplateBinding FontFamily}"
+                    TextElement.FontSize="{TemplateBinding FontSize}"
+                    TextElement.FontStretch="{TemplateBinding FontStretch}"
+                    TextElement.FontWeight="{TemplateBinding FontWeight}"/>
+			</Border>
+		</ControlTemplate>
+
+		<ControlTemplate 
+			x:Key="flatListViewItem" 
+			TargetType="ListViewItem">
+			<Border 
+				BorderBrush="{TemplateBinding BorderBrush}"
+                Background="{TemplateBinding Background}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Focusable="{TemplateBinding Focusable}"
+                Height="{TemplateBinding Height}"
+                Width="{TemplateBinding Width}"
+                HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                VerticalAlignment="{TemplateBinding VerticalAlignment}">
+				<ContentPresenter/>
+			</Border>
+		</ControlTemplate>
+
+		<ControlTemplate 
+			x:Key="headerBtn" 
+			TargetType="{x:Type Button}">
+			<Grid 
+				Background="{TemplateBinding Background}">
+				<ContentPresenter 
+					x:Name="MyContentPresenter" 
+                    Content="{TemplateBinding Content}"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center" />
+			</Grid>
+		</ControlTemplate>
+
+		<!--#endregion-->
+
+		<!--#region Styles-->
+
+		<Style x:Key="elementTextBox"
+			TargetType="TextBox">
+			<Style.Setters>
+				<Setter Property="Background" Value="{x:Null}"/>
+				<Setter Property="BorderBrush" Value="{x:Null}"/>
+				<Setter Property="VerticalContentAlignment" Value="Center"/>
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="IsReadOnly" Value="True"/>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate>
+							<Border>
+								<ScrollViewer x:Name="PART_ContentHost" />
+							</Border>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style.Setters>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="panelSelectButtonBorder"
+			TargetType="Border">
+			<Style.Setters>
+				<Setter Property="BorderBrush" Value ="White"/>
+				<Setter Property ="BorderThickness" Value="0, 2, 1, 0"/>
+				<Setter Property="CornerRadius" Value="10"/>
+				<Setter Property="Margin" Value="0, 10, 10, 0"/>
+				<Setter Property="Effect" Value="{StaticResource NotHover}"/>
+			</Style.Setters>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Trigger.Setters>
+						<Setter Property="Effect" Value="{StaticResource HoverLabel}"/>
+					</Trigger.Setters>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+		
+		<Style x:Key="SelectedItemsListView" 
+			TargetType="ListViewItem">
+			<Style.Setters>
+				<Setter 
+					Property="BorderThickness" 
+					Value="0"/>
+				<Setter 
+					Property="BorderBrush" 
+					Value="{x:Null}"/>
+				<Setter 
+					Property="Background" 
+					Value="{x:Null}"/>
+				<Setter 
+					Property="Effect" 
+					Value="{x:Null}"/>
+				<Setter 
+					Property="Margin" 
+					Value="0,0,0,5"/>
+				<Setter 
+					Property="Template" 
+					Value="{StaticResource flatListBoxItem}"/>
+			</Style.Setters>
+		</Style>
+
+		<Style x:Key="TabImg" 
+			TargetType="Image">
+			<Style.Setters>
+				<Setter 
+					Property="Effect" 
+					Value="{StaticResource NotHover}"/>
+				<Setter 
+					Property="Cursor" 
+					Value="Hand"/>
+			</Style.Setters>
+			<Style.Triggers>
+				<Trigger 
+					Property="IsMouseOver" 
+					Value="True">
+					<Trigger.Setters>
+						<Setter 
+							Property="Effect" 
+							Value="{StaticResource HoverImg}"/>
+					</Trigger.Setters>
+				</Trigger>
+				<DataTrigger 
+					Binding="{Binding ElementName=BODY_Btn,Path=IsMouseOver,Mode=OneWay}" 
+					Value="True">
+					<Setter 
+						Property="Effect" 
+						Value="{StaticResource HoverImg}"/>
+				</DataTrigger>
+				<DataTrigger 
+					Binding="{Binding Path=SelectedTab}" 
+					Value="8">
+					<Setter 
+						Property="Cursor" 
+						Value="Arrow"/>
+					<Setter 
+						Property="Effect" 
+						Value="{StaticResource SelectedImg}"/>
+				</DataTrigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="elementBtn" 
+			TargetType="Button">
+			<Style.Setters>
+				<Setter 
+					Property="Background" 
+					Value="#00FFFFFF"/>
+				<Setter 
+					Property="BorderBrush" 
+					Value="#99FFFFFF"/>
+				<Setter 
+					Property="BorderThickness" 
+					Value="3"/>
+				<Setter 
+					Property="Foreground" 
+					Value="White"/>
+				<Setter 
+					Property="FontSize" 
+					Value="32"/>
+				<Setter 
+					Property="Cursor" 
+					Value="Hand"/>
+				<Setter 
+					Property="Effect" 
+					Value="{StaticResource NotHover}"/>
+				<Setter 
+					Property="Template" 
+					Value="{StaticResource flatRoundedBtn}"/>
+			</Style.Setters>
+			<Style.Triggers>
+				<Trigger 
+					Property="IsMouseOver" 
+					Value="True">
+					<Trigger.Setters>
+						<Setter 
+							Property="Effect" 
+							Value="{StaticResource HoverImg}"/>
+						<Setter 
+							Property="Background" 
+							Value="#33FFFFFF"/>
+					</Trigger.Setters>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="elementExpanderLabel" 
+			TargetType="Label">
+			<Style.Setters>
+				<Setter 
+					Property="Foreground" 
+					Value="White"/>
+				<Setter 
+					Property="FontWeight" 
+					Value="Normal"/>
+				<Setter 
+					Property="FontSize" 
+					Value="18"/>
+			</Style.Setters>
+		</Style>
+
+		<Style x:Key="elementsListLoader" 
+			TargetType="Border">
+			<Style.Setters>
+				<Setter 
+					Property="Visibility" 
+					Value='Hidden'/>
+				<Setter 
+					Property="BorderThickness" 
+					Value="3,3,0,0"/>
+				<Setter 
+					Property="Width" 
+					Value="120"/>
+				<Setter 
+					Property="Height" 
+					Value="120"/>
+				<Setter 
+					Property="CornerRadius" 
+					Value="60"/>
+				<Setter 
+					Property="BorderBrush" 
+					Value="White"/>
+			</Style.Setters>
+			<Style.Triggers>
+				<DataTrigger 
+					Binding="{Binding ElementName=ItemsListBox, Path=Items.Count}" 
+					Value="0">
+					<DataTrigger.Setters>
+						<Setter 
+							Property="Visibility" 
+							Value="Visible"/>
+					</DataTrigger.Setters>
+				</DataTrigger>
+				<EventTrigger 
+					RoutedEvent="Loaded">
+					<EventTrigger.Actions>
+						<BeginStoryboard 
+							Storyboard="{StaticResource LoadingCircle}"/>
+					</EventTrigger.Actions>
+				</EventTrigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="fieldsListLoader" TargetType="Border">
+			<Style.Setters>
+				<Setter Property="Visibility" Value='Hidden'/>
+				<Setter Property="BorderThickness" Value="3,3,0,0"/>
+				<Setter Property="Width" Value="120"/>
+				<Setter Property="Height" Value="120"/>
+				<Setter Property="CornerRadius" Value="60"/>
+				<Setter Property="BorderBrush" Value="White"/>
+			</Style.Setters>
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding ElementName=FiledsListBox, Path=Items.Count}" Value="0">
+					<DataTrigger.Setters>
+						<Setter Property="Visibility" Value="Visible"/>
+					</DataTrigger.Setters>
+				</DataTrigger>
+				<EventTrigger RoutedEvent="Loaded">
+					<EventTrigger.Actions>
+						<BeginStoryboard Storyboard="{StaticResource LoadingCircle}"/>
+					</EventTrigger.Actions>
+				</EventTrigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="listElementBtn" TargetType="Button">
+			<Style.Setters>
+				<Setter Property="Background" Value="#00FFFFFF"/>
+				<Setter Property="BorderBrush" Value="#99FFFFFF"/>
+				<Setter Property="BorderThickness" Value="3"/>
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="FontSize" Value="32"/>
+				<Setter Property="Cursor" Value="Hand"/>
+				<Setter Property="Effect" Value="{StaticResource NotHover}"/>
+				<Setter Property="Template" Value="{StaticResource flatRoundedBtn}"/>
+				<Setter Property="Margin" Value="15"/>
+				<Setter Property="MinWidth" Value="40"/>
+				<Setter Property="MinHeight" Value="40"/>
+				<Setter Property="HorizontalAlignment" Value="Right"/>
+				<Setter Property="VerticalAlignment" Value="Center"/>
+			</Style.Setters>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Trigger.Setters>
+						<Setter Property="Effect" Value="{StaticResource HoverImg}"/>
+						<Setter Property="Background" Value="#33FFFFFF"/>
+					</Trigger.Setters>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="selectElementBtn" TargetType="Button" BasedOn="{StaticResource listElementBtn}">
+			<Style.Setters>
+				<Setter Property="Command" Value="{Binding ElementName=Computer_Complector, Path=DataContext.SelectItem}"/>
+				<Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Self}, Path=Tag}"/>
+			</Style.Setters>
+		</Style>
+
+		<Style x:Key="deleteElementBtn" TargetType="Button" BasedOn="{StaticResource selectElementBtn}">
+			<Style.Setters>
+				<Setter Property="Visibility" Value="Visible"/>
+				<Setter Property="Command" Value="{Binding ElementName=Computer_Complector, Path=DataContext.DeleteElement}"/>
+				<Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Self}, Path=Tag}"/>
+			</Style.Setters>
+		</Style>
+
+		<Style x:Key="editElementBtn" TargetType="Button" BasedOn="{StaticResource selectElementBtn}">
+			<Style.Setters>
+				<Setter Property="Visibility" Value="Visible"/>
+			</Style.Setters>
+		</Style>
+
+		<Style x:Key="selectedViewList" TargetType="ListView">
+			<Style.Setters>
+				<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
+				<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
+				<Setter Property="Background" Value="{x:Null}"/>
+				<Setter Property="BorderBrush" Value="{x:Null}"/>
+				<Setter Property="Foreground" Value="{x:Null}"/>
+				<Setter Property="ItemContainerStyle" Value="{StaticResource SelectedItemsListView}"/>
+			</Style.Setters>
+		</Style>
+
+		<Style x:Key="selectedListViewContainer" TargetType="ListView">
+			<Style.Setters>
+				<Setter Property="DataContext" Value="{Binding Selected}"/>
+				<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
+				<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
+				<Setter Property="Background" Value="{x:Null}"/>
+				<Setter Property="BorderBrush" Value="{x:Null}"/>
+				<Setter Property="Foreground" Value="{x:Null}"/>
+				<Setter Property="ItemContainerStyle" Value="{StaticResource SelectedItemsListView}"/>
+				<Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+			</Style.Setters>
+		</Style>
+
+		<Style x:Key="selectedItemDeselectBtn" TargetType="Button">
+			<Style.Setters>
+				<Setter Property="Background" Value="#00FFFFFF"/>
+				<Setter Property="BorderBrush" Value="#99FFFFFF"/>
+				<Setter Property="BorderThickness" Value="3"/>
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="FontSize" Value="32"/>
+				<Setter Property="Cursor" Value="Hand"/>
+				<Setter Property="Effect" Value="{StaticResource NotHover}"/>
+				<Setter Property="Template" Value="{StaticResource flatRoundedBtn}"/>
+				<Setter Property="Margin" Value="20"/>
+				<Setter Property="MinWidth" Value="40"/>
+				<Setter Property="MinHeight" Value="40"/>
+				<Setter Property="HorizontalAlignment" Value="Right"/>
+				<Setter Property="VerticalAlignment" Value="Center"/>
+				<Setter Property="Command" Value="{Binding ElementName=Computer_Complector, Path=DataContext.DeselectItem}"/>
+				<Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Self}, Path=Tag}"/>
+			</Style.Setters>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Trigger.Setters>
+						<Setter Property="Effect" Value="{StaticResource HoverImg}"/>
+						<Setter Property="Background" Value="#33FFFFFF"/>
+					</Trigger.Setters>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="minimizeBtn" TargetType="Button">
+			<Style.Setters>
+				<Setter Property="Background" Value="#FF1E1E1E"/>
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="Margin" Value="10,0,10,5"/>
+				<Setter Property="BorderBrush" Value="{x:Null}"/>
+				<Setter Property="FontWeight" Value="Bold"/>
+				<Setter Property="Template" Value="{StaticResource headerBtn}"/>
+			</Style.Setters>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Trigger.Setters>
+						<Setter Property="Background" Value="#FF3C3C3C"/>
+					</Trigger.Setters>
+				</Trigger>
+				<Trigger Property="IsPressed" Value="True">
+					<Trigger.Setters>
+						<Setter Property="Background" Value="#FF5A5A5A"/>
+					</Trigger.Setters>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="restoreBtn" TargetType="Button">
+			<Style.Setters>
+				<Setter Property="Background" Value="#FF1E1E1E"/>
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="Template" Value="{StaticResource headerBtn}"/>
+				<Setter Property="Margin" Value="10,0,10,5"/>
+				<Setter Property="BorderBrush" Value="{x:Null}"/>
+				<Setter Property="FontWeight" Value="Bold"/>
+			</Style.Setters>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Trigger.Setters>
+						<Setter Property="Background" Value="#FF3C3C3C"/>
+					</Trigger.Setters>
+				</Trigger>
+				<Trigger Property="IsPressed" Value="True">
+					<Trigger.Setters>
+						<Setter Property="Background" Value="#FF5A5A5A"/>
+					</Trigger.Setters>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="closeBtn" TargetType="Button">
+			<Style.Setters>
+				<Setter Property="Background" Value="#FF5A1E1E"/>
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="Margin" Value="10,0,10,5"/>
+				<Setter Property="BorderBrush" Value="{x:Null}"/>
+				<Setter Property="FontWeight" Value="Bold"/>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type Button}">
+							<Grid Background="{TemplateBinding Background}">
+								<ContentPresenter x:Name="MyContentPresenter" 
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center" />
+							</Grid>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style.Setters>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Trigger.Setters>
+						<Setter Property="Background" Value="#FF781E1E"/>
+					</Trigger.Setters>
+				</Trigger>
+				<Trigger Property="IsPressed" Value="True">
+					<Trigger.Setters>
+						<Setter Property="Background" Value="#FF961E1E"/>
+					</Trigger.Setters>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="headerLabel" TargetType="Label">
+			<Style.Setters>
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="Margin" Value="20,0,0,0"/>
+				<Setter Property="VerticalAlignment" Value="Center"/>
+				<Setter Property="FontWeight" Value="Bold"/>
+			</Style.Setters>
+		</Style>
+
+		<Style x:Key="loginBtn" TargetType="Button">
+			<Style.Setters>
+				<Setter Property="Background" Value="{x:Null}"/>
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="BorderBrush" Value="{x:Null}"/>
+				<Setter Property="Margin" Value="3"/>
+				<Setter Property="Background" Value="#FF2D2D30"/>
+				<Setter Property="Content" Value="Login"/>
+				<Setter Property="HorizontalContentAlignment" Value="Center"/>
+				<Setter Property="VerticalContentAlignment" Value="Center"/>
+				<Setter Property="Template" Value="{StaticResource flatBtn}"/>
+			</Style.Setters>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Trigger.Setters>
+						<Setter Property="Background" Value="#FF3C3C3C"/>
+					</Trigger.Setters>
+				</Trigger>
+				<Trigger Property="IsPressed" Value="True">
+					<Trigger.Setters>
+						<Setter Property="Background" Value="#FF5A5A5A"/>
+					</Trigger.Setters>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<!--#endregion-->
+
+		<!--#region Data Templates-->
+
+		<!--#region Elements-->
+
+		<DataTemplate x:Key="BODYElements">
+			<Border BorderBrush="White" MinWidth="600" MinHeight="100" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="600" MinHeight="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="4*"/>
+					</Grid.RowDefinitions>
+					<TextBlock MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" TextWrapping="WrapWithOverflow" Foreground="White" FontSize="20" Grid.Column="0" Margin="0,10,10,0" HorizontalAlignment="Stretch" Text="{Binding Path=Title}" VerticalAlignment="Center"/>
+					<StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,20">
+						<Separator Background="White" MinHeight="2"/>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="2*"/>
+							</Grid.ColumnDefinitions>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+							</Grid.RowDefinitions>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+							<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=Company, Mode=TwoWay}" Style="{StaticResource elementTextBox}"></TextBox>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="1" Content="Formfactor:"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="1" Grid.Row="1" Content="{Binding Path=Formfactor}"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="2" Content="Type:"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="1" Grid.Row="2" Content="{Binding Path=Type}"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="3" Content="Build-in charger:"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="1" Grid.Row="3" Content="{Binding Path=BuildInCharger}"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="4" Content="ChargerPower:"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="1" Grid.Row="4" Content="{Binding StringFormat={}{0} Wt, Path=ChargerPower}"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="5" Content="Color:"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="1" Grid.Row="5" Content="{Binding Path=Color}"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="6" Content="USB 2.0 ports:"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="1" Grid.Row="6" Content="{Binding Path=USB2Ports}"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="7" Content="USB 3.0 ports:"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="1" Grid.Row="7" Content="{Binding Path=USB3Ports}"/>
+							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="8" Content="Additions:"/>
+							<TextBlock Foreground="White" FontSize="18" Grid.Column="1" Grid.Row="8" TextWrapping="WrapWithOverflow" Text="{Binding Path=Additions}"/>
+						</Grid>
+					</StackPanel>
+					<StackPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Orientation="Vertical">
+						<Button Template="{StaticResource flatRoundedBtn}">
+							Edit
+						</Button>
+						<Button Template="{StaticResource flatRoundedBtn}">
+							Delete
+						</Button>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="CHARGERElements">
+			<Border BorderBrush="White" MinWidth="600" MinHeight="100" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="600" MinHeight="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="6*"/>
+						<ColumnDefinition Width="3*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="4*"/>
+					</Grid.RowDefinitions>
+					<TextBlock TextWrapping="WrapWithOverflow" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" Foreground="White" FontSize="20" Grid.Column="1" Margin="0,10,10,0" HorizontalAlignment="Stretch" Text="{Binding Path=Title}"/>
+					<Image Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/Images/CHARGER.png" Margin="23,10,23.4,10.8" MaxWidth="120" MaxHeight="120" />
+					<StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,20">
+						<Separator Background="White" MinHeight="2"/>
+						<StackPanel Orientation="Horizontal">
+							<Label Foreground="White" VerticalAlignment="Center" Content="Power:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Power}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Sertificate:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Sertificate}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Connector type:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=ConnectorType}"/>
+						</StackPanel>
+						<Expander Foreground="White" FontWeight="Bold" FontSize="20" Expanded="Expander_Expanded">
+							<Expander.Header>
+								Info
+							</Expander.Header>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*"/>
+									<ColumnDefinition Width="2*"/>
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+								</Grid.RowDefinitions>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="0" Content="{Binding Path=Company}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Series:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="1" Content="{Binding Path=Series}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Power:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="2" Content="{Binding Path=Power}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="Sertificate 80 Plus:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="3" Content="{Binding Path=Sertificate}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="Video connectors:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="4" Content="{Binding Path=VideoConnectorsAmount}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Connector type:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="5" Content="{Binding Path=ConnectorType}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="6" Content="SATA:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="6" Content="{Binding Path=SATAAmount}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="7" Content="IDE:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="7" Content="{Binding Path=IDEAmount}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="7" Content="Motherboard connector:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="7" Content="{Binding Path=MotherboardConnector}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="8" Content="Additions:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="8" Content="{Binding Path=Additions}"/>
+							</Grid>
+						</Expander>
+					</StackPanel>
+					<StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal">
+						<Button 
+							Content ="?" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"/>
+						<Button 
+							Content ="-" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"
+							Grid.Column="2" 
+							Grid.Row="0" />
+						<Button 
+							Style="{StaticResource selectElementBtn}" 
+							Content ="+" 
+							Grid.Column="2" 
+							Grid.Row="0" 
+							Tag="{Binding Path=ID}" 
+							Command="{Binding ElementName=Computer_Complector, Path=DataContext.SelectItem}"
+							CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Tag}"/>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="COOLERElements">
+			<Border BorderBrush="White" MinWidth="600" MinHeight="100" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="600" MinHeight="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="6*"/>
+						<ColumnDefinition Width="3*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="4*"/>
+					</Grid.RowDefinitions>
+					<TextBlock TextWrapping="WrapWithOverflow" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" Foreground="White" FontSize="20" Grid.Column="1" Margin="0,10,10,0" HorizontalAlignment="Stretch" Text="{Binding Path=Title}"/>
+					<Image Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/Images/COOLER.png" Margin="23,10,23.4,10.8" MaxWidth="120" MaxHeight="120" />
+					<StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,20">
+						<Separator Background="White" MinHeight="2"/>
+						<StackPanel Orientation="Horizontal">
+							<Label Foreground="White" VerticalAlignment="Center" Content="Purpose:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Purpose}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Type:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Type}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Material:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Material}"/>
+						</StackPanel>
+						<Expander Foreground="White" FontWeight="Bold" FontSize="20" Expanded="Expander_Expanded">
+							<Expander.Header>
+								Info
+							</Expander.Header>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*"/>
+									<ColumnDefinition Width="2*"/>
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+								</Grid.RowDefinitions>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="0" Content="{Binding Path=Company}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Purpose:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="1" Content="{Binding Path=Purpose}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Type:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="2" Content="{Binding Path=Type}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="Socket:"/>
+								<ListView Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="3" ItemsSource="{Binding Path=Socket}" Background="{x:Null}" BorderBrush="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+									<ListView.ItemContainerStyle>
+										<Style TargetType="ListViewItem">
+											<Style.Setters>
+												<Setter Property="Template" Value="{StaticResource flatListBoxItem}"/>
+											</Style.Setters>
+										</Style>
+									</ListView.ItemContainerStyle>
+								</ListView>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="Material:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="4" Content="{Binding Path=Material}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Ventilator diameter:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="5" Content="{Binding Path=VentDiam}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="6" Content="Turn adjustment:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="6" Content="{Binding Path=TurnAdj}"/>
+							</Grid>
+						</Expander>
+					</StackPanel>
+					<StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal">
+						<Button 
+							Content ="?" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"/>
+						<Button 
+							Content ="-" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"
+							Grid.Column="2" 
+							Grid.Row="0" />
+						<Button 
+							Style="{StaticResource selectElementBtn}" 
+							Content ="+" 
+							Grid.Column="2" 
+							Grid.Row="0" 
+							Tag="{Binding Path=ID}" 
+							Command="{Binding ElementName=Computer_Complector, Path=DataContext.SelectItem}"
+							CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Tag}"/>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="CPUElements">
+			<Border BorderBrush="White" MinWidth="600" MinHeight="100" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="600" MinHeight="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="6*"/>
+						<ColumnDefinition Width="3*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="4*"/>
+					</Grid.RowDefinitions>
+					<TextBlock TextWrapping="WrapWithOverflow" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" Foreground="White" FontSize="20" Grid.Column="1" Margin="0,10,10,0" HorizontalAlignment="Stretch" Text="{Binding Path=Title}"/>
+					<Image Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/Images/CPU.png" Margin="23,10,23.4,10.8" MaxWidth="120" MaxHeight="120" />
+					<StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,20">
+						<Separator Background="White" MinHeight="2"/>
+						<StackPanel Orientation="Horizontal">
+							<Label Foreground="White" VerticalAlignment="Center" Content="Series:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Series}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Socket:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Socket}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Frequency:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Frequency}"/>
+						</StackPanel>
+						<Expander Foreground="White" FontWeight="Bold" FontSize="20" Expanded="Expander_Expanded">
+							<Expander.Header>
+								Info
+							</Expander.Header>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*"/>
+									<ColumnDefinition Width="2*"/>
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+								</Grid.RowDefinitions>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="0" Content="{Binding Path=Company}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="1" Grid.Column="0" Content="Series:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="1" Grid.Column="1" Content="{Binding Path=Series}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="2" Grid.Column="0" Content="Socket:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="2" Grid.Column="1" Content="{Binding Path=Socket}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="3" Grid.Column="0" Content="Frequency:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="3" Grid.Column="1" Content="{Binding Path=Frequency}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="4" Grid.Column="0" Content="Cores:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="4" Grid.Column="1" Content="{Binding Path=CoresAmount}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="5" Grid.Column="0" Content="Threads:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="5" Grid.Column="1" Content="{Binding Path=ThreadsAmount}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="6" Grid.Column="0" Content="Integrated graphics:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="6" Grid.Column="1" Content="{Binding Path=IntegratedGraphics}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="7" Grid.Column="0" Content="Core:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="7" Grid.Column="1" Content="{Binding Path=Core}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="8" Grid.Column="0" Content="Delivery type:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="8" Grid.Column="1" Content="{Binding Path=DeliveryType}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="9" Grid.Column="0" Content="Overcloacking:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="9" Grid.Column="1" Content="{Binding Path=Overcloacking}"/>
+							</Grid>
+						</Expander>
+					</StackPanel>
+					<StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal">
+						<Button 
+							Content ="?" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"/>
+						<Button 
+							Content ="-" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"
+							Grid.Column="2" 
+							Grid.Row="0" />
+						<Button 
+							Style="{StaticResource selectElementBtn}" 
+							Content ="+" 
+							Grid.Column="2" 
+							Grid.Row="0" 
+							Tag="{Binding Path=ID}" 
+							Command="{Binding ElementName=Computer_Complector, Path=DataContext.SelectItem}"
+							CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Tag}"/>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="HDDElements">
+			<Border BorderBrush="White" MinWidth="600" MinHeight="100" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="600" MinHeight="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="6*"/>
+						<ColumnDefinition Width="3*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="4*"/>
+					</Grid.RowDefinitions>
+					<TextBlock TextWrapping="WrapWithOverflow" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" Foreground="White" FontSize="20" Grid.Column="1" Margin="0,10,10,0" HorizontalAlignment="Stretch" Text="{Binding Path=Title}"/>
+					<Image Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/Images/HDD.png" Margin="23,10,23.4,10.8" MaxWidth="120" MaxHeight="120" />
+					<StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,20">
+						<Separator Background="White" MinHeight="2"/>
+						<StackPanel Orientation="Horizontal">
+							<Label Foreground="White" VerticalAlignment="Center" Content="Capacity:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Capacity}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Formfactor:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Formfactor}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Speed:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Speed}"/>
+						</StackPanel>
+						<Expander Foreground="White" FontWeight="Bold" FontSize="20" Expanded="Expander_Expanded">
+							<Expander.Header>
+								Info
+							</Expander.Header>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*"/>
+									<ColumnDefinition Width="2*"/>
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+								</Grid.RowDefinitions>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="0" Content="{Binding Path=Company}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Formfactor:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="1" Content="{Binding Path=Formfactor}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Capacity:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="2" Content="{Binding Path=Capacity}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="Interface:"/>
+								<ListView Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="3" ItemsSource="{Binding Path=Interface}" Background="{x:Null}" BorderBrush="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+									<ListView.ItemContainerStyle>
+										<Style TargetType="ListViewItem">
+											<Style.Setters>
+												<Setter Property="Template" Value="{StaticResource flatListBoxItem}"/>
+											</Style.Setters>
+										</Style>
+									</ListView.ItemContainerStyle>
+								</ListView>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="Buffer volume:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="4" Content="{Binding Path=BufferVolume}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Speed:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="5" Content="{Binding Path=Speed}"/>
+							</Grid>
+						</Expander>
+					</StackPanel>
+					<StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal">
+						<Button 
+							Content ="?" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"/>
+						<Button 
+							Content ="-" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"
+							Grid.Column="2" 
+							Grid.Row="0" />
+						<Button 
+							Style="{StaticResource selectElementBtn}" 
+							Content ="+" 
+							Grid.Column="2" 
+							Grid.Row="0" 
+							Tag="{Binding Path=ID}" 
+							Command="{Binding ElementName=Computer_Complector, Path=DataContext.SelectItem}"
+							CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Tag}"/>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="MOTHERBOARDElements">
+			<Border BorderBrush="White" MinWidth="600" MinHeight="100" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="600" MinHeight="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="6*"/>
+						<ColumnDefinition Width="3*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="4*"/>
+					</Grid.RowDefinitions>
+					<TextBlock TextWrapping="WrapWithOverflow" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" Foreground="White" FontSize="20" Grid.Column="1" Margin="0,10,10,0" HorizontalAlignment="Stretch" Text="{Binding Path=Title}"/>
+					<Image Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/Images/MOTHERBOARD.png" Margin="23,10,23.4,10.8" MaxWidth="120" MaxHeight="120" Grid.RowSpan="2" />
+					<StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,20">
+						<Separator Background="White" MinHeight="2"/>
+						<StackPanel Orientation="Horizontal">
+							<Label Foreground="White" VerticalAlignment="Center" Content="Socket:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Socket}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Chipset:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Chipset}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Formfactor:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Formfactor}"/>
+						</StackPanel>
+						<Expander Foreground="White" FontWeight="Bold" FontSize="20" Expanded="Expander_Expanded">
+							<Expander.Header>
+								Info
+							</Expander.Header>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*"/>
+									<ColumnDefinition Width="2*"/>
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+								</Grid.RowDefinitions>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="0" Content="{Binding Path=Company}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Series:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="1" Content="{Binding Path=Series}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Socket:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="2" Content="{Binding Path=Socket}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="Chipset:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="3" Content="{Binding Path=Chipset}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="CPU company:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="4" Content="{Binding Path=CPUCompany}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Formfactor:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="5" Content="{Binding Path=Formfactor}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="6" Content="Memorys:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="6" Content="{Binding Path=Memory}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="7" Content="Memory slots:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="7" Content="{Binding Path=MemorySlotsAmount}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="8" Content="MemoryChanels:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="8" Content="{Binding Path=MemoryChanelsAmount}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="9" Content="Maximum memory:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="9" Content="{Binding Path=MaxMemory}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="10" Content="Ram max frequency:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="10" Content="{Binding Path=RAMMaxFreq}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="11" Content="Slots:"/>
+								<ListView Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="11" ItemsSource="{Binding Path=Slots}" Background="{x:Null}" BorderBrush="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+									<ListView.ItemContainerStyle>
+										<Style TargetType="ListViewItem">
+											<Style.Setters>
+												<Setter Property="Template" Value="{StaticResource flatListBoxItem}"/>
+											</Style.Setters>
+										</Style>
+									</ListView.ItemContainerStyle>
+								</ListView>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="12" Content="Additions:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="12" Content="{Binding Path=Additions}"/>
+							</Grid>
+						</Expander>
+					</StackPanel>
+					<StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal">
+						<Button 
+							Content ="?" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"/>
+						<Button 
+							Content ="-" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"
+							Grid.Column="2" 
+							Grid.Row="0" />
+						<Button 
+							Style="{StaticResource selectElementBtn}" 
+							Content ="+" 
+							Grid.Column="2" 
+							Grid.Row="0" 
+							Tag="{Binding Path=ID}" 
+							Command="{Binding ElementName=Computer_Complector, Path=DataContext.SelectItem}"
+							CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Tag}"/>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="RAMElements">
+			<Border BorderBrush="White" MinWidth="600" MinHeight="100" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="600" MinHeight="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="6*"/>
+						<ColumnDefinition Width="3*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="4*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Foreground="White" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" FontSize="20" Grid.Column="1" Margin="0,10,10,0" HorizontalAlignment="Stretch" Text="{Binding Path=Title}"/>
+					<Image Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/Images/RAM.png" Margin="23,10,23.4,10.8" MaxWidth="120" MaxHeight="120" Grid.RowSpan="2" />
+					<StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,20">
+						<Separator Background="White" MinHeight="2"/>
+						<StackPanel Orientation="Horizontal">
+							<Label Foreground="White" VerticalAlignment="Center" Content="Type:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Type}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Volume:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Volume}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Memory:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Memory}"/>
+						</StackPanel>
+						<Expander Foreground="White" FontWeight="Bold" FontSize="20" Expanded="Expander_Expanded">
+							<Expander.Header>
+								Info
+							</Expander.Header>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*"/>
+									<ColumnDefinition Width="2*"/>
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+								</Grid.RowDefinitions>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="0" Content="{Binding Path=Company}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Series:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="1" Content="{Binding Path=Series}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Memory type:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="5" Content="{Binding Path=MemoryType}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Purpose:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="2" Content="{Binding Path=Purpose}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="Volume:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="3" Content="{Binding Path=Volume}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="Modules amount:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="4" Content="{Binding Path=ModuleAmount}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="6" Content="Frequency:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="6" Content="{Binding Path=Freq}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="7" Content="CAS latency:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="7" Content="{Binding Path=CL}"/>
+							</Grid>
+						</Expander>
+					</StackPanel>
+					<StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal">
+						<Button 
+							Content ="?" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"/>
+						<Button 
+							Content ="-" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"
+							Grid.Column="2" 
+							Grid.Row="0" />
+						<Button 
+							Style="{StaticResource selectElementBtn}" 
+							Content ="+" 
+							Grid.Column="2" 
+							Grid.Row="0" 
+							Tag="{Binding Path=ID}" 
+							Command="{Binding ElementName=Computer_Complector, Path=DataContext.SelectItem}"
+							CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Tag}"/>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="SSDElements">
+			<Border BorderBrush="White" MinWidth="600" MinHeight="100" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="600" MinHeight="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="6*"/>
+						<ColumnDefinition Width="3*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="4*"/>
+					</Grid.RowDefinitions>
+					<TextBlock TextWrapping="WrapWithOverflow" MaxWidth="{Binding ElementName='ItemsListBox',Path='ActualWidth'}" Foreground="White" FontSize="20" Grid.Column="1" Margin="0,10,10,0" HorizontalAlignment="Stretch" Text="{Binding Path=Title}"/>
+					<Image Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/Images/SSD.png" Margin="23,10,23.4,10.8" MaxWidth="120" MaxHeight="120" Grid.RowSpan="2" />
+					<StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,20">
+						<Separator Background="White" MinHeight="2"/>
+						<StackPanel Orientation="Horizontal">
+							<Label Foreground="White" VerticalAlignment="Center" Content="Capacity:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Capacity}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Formfactor:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Formfactor}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Cell type:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=CellType}"/>
+						</StackPanel>
+						<Expander Foreground="White" FontWeight="Bold" FontSize="20" Expanded="Expander_Expanded">
+							<Expander.Header>
+								Info
+							</Expander.Header>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*"/>
+									<ColumnDefinition Width="2*"/>
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+								</Grid.RowDefinitions>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="0" Content="{Binding Path=Company}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Series:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="1" Content="{Binding Path=Series}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Capacity:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="2" Content="{Binding Path=Capacity}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="Formfactor:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="3" Content="{Binding Path=Formfactor}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="Interface:"/>
+								<ListView Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="4" ItemsSource="{Binding Path=Interface}" Background="{x:Null}" BorderBrush="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+									<ListView.ItemContainerStyle>
+										<Style TargetType="ListViewItem">
+											<Style.Setters>
+												<Setter Property="Template" Value="{StaticResource flatListBoxItem}"/>
+											</Style.Setters>
+										</Style>
+									</ListView.ItemContainerStyle>
+								</ListView>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Cell type:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="5" Content="{Binding Path=CellType}"/>
+							</Grid>
+						</Expander>
+					</StackPanel>
+					<StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal">
+						<Button 
+							Content ="?" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"/>
+						<Button 
+							Content ="-" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"
+							Grid.Column="2" 
+							Grid.Row="0" />
+						<Button 
+							Style="{StaticResource selectElementBtn}" 
+							Content ="+" 
+							Grid.Column="2" 
+							Grid.Row="0" 
+							Tag="{Binding Path=ID}" 
+							Command="{Binding ElementName=Computer_Complector, Path=DataContext.SelectItem}"
+							CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Tag}"/>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="VIDEOCARDElements">
+			<Border BorderBrush="White" MinWidth="600" MinHeight="100" MaxWidth="{Binding ElementName='ItemsListBox', Path='ActualWidth'}" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="600" MinHeight="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="6*"/>
+						<ColumnDefinition Width="3*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="4*"/>
+					</Grid.RowDefinitions>
+					<Image Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/Images/VIDEOCARD.png" Margin="23,10,23.4,10.8" MaxWidth="120" MaxHeight="120" Grid.RowSpan="2" />
+					<StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,20">
+						<Separator Background="White" MinHeight="2"/>
+						<StackPanel Orientation="Horizontal">
+							<Label Foreground="White" VerticalAlignment="Center" Content="Proccessor:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Proccessor}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="VRAM:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=VRAM}"/>
+							<Label Foreground="White" VerticalAlignment="Center" Content="Memory:"/>
+							<Label Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0" Content="{Binding Path=Memory}"/>
+						</StackPanel>
+						<Expander Foreground="White" FontWeight="Bold" FontSize="20" Expanded="Expander_Expanded">
+							<Expander.Header>
+								Info
+							</Expander.Header>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*"/>
+									<ColumnDefinition Width="2*"/>
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+									<RowDefinition Height="1*"/>
+								</Grid.RowDefinitions>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="0" Content="{Binding Path=Company}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Series:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="1" Content="{Binding Path=Series}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Proccessor:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="2" Content="{Binding Path=Proccessor}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="VRAM:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="3" Content="{Binding Path=VRAM}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="Capacity:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="4" Content="{Binding Path=Capacity}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Family:"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="5" Content="{Binding Path=Family}"/>
+								<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="6" Content="Connector:"/>
+								<ListView Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="1" Grid.Row="6" ItemsSource="{Binding Path=Connector}" Background="{x:Null}" BorderBrush="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+									<ListView.ItemContainerStyle>
+										<Style TargetType="ListViewItem">
+											<Style.Setters>
+												<Setter Property="Template" Value="{StaticResource flatListBoxItem}"/>
+											</Style.Setters>
+										</Style>
+									</ListView.ItemContainerStyle>
+								</ListView>
+							</Grid>
+						</Expander>
+					</StackPanel>
+					<StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal">
+						<Button 
+							Content ="?" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource editElementBtn}"/>
+						<Button 
+							Content ="-" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource deleteElementBtn}"/>
+						<Button 
+							Content ="+" 
+							Tag="{Binding Path=ID}" 
+							Style="{StaticResource selectElementBtn}"/>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</DataTemplate>
+
+		<!--#endregion-->
+
+		<!--#region Selected Elements-->
+
+		<DataTemplate x:Key="BODYElementSelected">
+			<Border BorderBrush="White" MinWidth="100" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="2*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Row="0" TextWrapping="WrapWithOverflow" Foreground="White" FontSize="20" Grid.Column="0" Grid.ColumnSpan="1" Margin="20,0" HorizontalAlignment="Left" Text="{Binding Path=Title}" VerticalAlignment="Center" MaxWidth="180"/>
+					<Button 
+						Content ="X" 
+						Style="{StaticResource selectedItemDeselectBtn}"
+						Grid.Column="2"
+						Grid.Row="0"
+						Tag="8"/>
+					<Separator Grid.Row="1" Grid.ColumnSpan="2" Background="White" MinHeight="2"/>
+					<Expander Margin="10,0,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+						<Expander.Header>
+							<Label Foreground="White">Info</Label>
+						</Expander.Header>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+							</Grid.RowDefinitions>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,10,0,10" MaxWidth="260" Grid.Row="2" Foreground="White" FontWeight="Normal" FontSize="18" Text="{Binding Path=Company, StringFormat=Vendor: {0}}" HorizontalAlignment="Left"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,10,0,10" MaxWidth="260" Grid.Row="3" Foreground="White" FontWeight="Normal" FontSize="18" Text="Formfactor:" HorizontalAlignment="Left"/>
+							<ListView Foreground="White" FontWeight="Normal" MaxWidth="260" FontSize="18" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Path=Formfactor}" Background="{x:Null}" BorderBrush="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Padding="20,0,0,10" Grid.IsSharedSizeScope="True">
+								<ListView.ItemContainerStyle>
+									<Style TargetType="ListViewItem">
+										<Style.Setters>
+											<Setter Property="Template" Value="{StaticResource flatListBoxItem}"/>
+										</Style.Setters>
+									</Style>
+								</ListView.ItemContainerStyle>
+							</ListView>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Foreground="White" FontWeight="Normal" FontSize="18" Text="{Binding Path=Type, StringFormat=Type: {0}}" HorizontalAlignment="Left"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Foreground="White" FontWeight="Normal" FontSize="18" Text="{Binding Path=BuildInCharger,StringFormat=Build-in charger: {0}}" HorizontalAlignment="Left"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Foreground="White" FontWeight="Normal" FontSize="18" Text="{Binding StringFormat=Charger power: {0} Wt, Path=ChargerPower}" HorizontalAlignment="Left"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Foreground="White" FontWeight="Normal" FontSize="18" Text="{Binding Path=Color, StringFormat=Color {0}}" HorizontalAlignment="Left"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Foreground="White" FontWeight="Normal" FontSize="18" Text="{Binding Path=USB2Ports, StringFormat=USB 2.0 ports: {0}}" HorizontalAlignment="Left"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Foreground="White" FontWeight="Normal" FontSize="18" Text="{Binding Path=USB3Ports, StringFormat=UDB 3.0 ports: {0}}" HorizontalAlignment="Left"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Foreground="White" FontWeight="Normal" FontSize="18" Text="{Binding Path=Additions, StringFormat=Additions: {0}}" HorizontalAlignment="Left"/>
+						</Grid>
+					</Expander>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="CHARGERElementSelected">
+			<Border BorderBrush="White" MinWidth="100" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="2*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Row="0" TextWrapping="WrapWithOverflow" Foreground="White" FontSize="20" Grid.Column="0" Grid.ColumnSpan="1" Margin="20,0" HorizontalAlignment="Left" Text="{Binding Path=Title}" VerticalAlignment="Center" MaxWidth="180"/>
+					<Button 
+						Content ="X" 
+						Style="{StaticResource selectedItemDeselectBtn}"
+						Grid.Column="2"
+						Grid.Row="0"
+						Tag="8"/>
+					<Separator Grid.Row="1" Background="White" MinHeight="2" Grid.ColumnSpan="2"/>
+					<Expander Margin="10,0,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+						<Expander.Header>
+							<Label Foreground="White">Info</Label>
+						</Expander.Header>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+							</Grid.RowDefinitions>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,10,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Text="{Binding Path=Company, StringFormat=Vendor: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Text="{Binding Path=Series, StringFormat=Series: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Text="{Binding Path=Power, StringFormat=Power: {0} Wt}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Text="{Binding Path=Sertificate, StringFormat=Sertificate 80 Plus: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" Text="{Binding Path=VideoConnectorsAmount, StringFormat=Video connectors amount: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7" Text="{Binding Path=ConnectorType, StringFormat=Connector type: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="8" Text="{Binding Path=SATAAmount, StringFormat=Amount of SATA: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="9" Text="{Binding Path=IDEAmount, StringFormat=Amount of IDE: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="10" Text="{Binding Path=MotherboardConnector, StringFormat=Motherboard connector: {0}}"/>
+						</Grid>
+					</Expander>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="COOLERElementSelected">
+			<Border BorderBrush="White" MinWidth="100" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="2*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock TextWrapping="WrapWithOverflow" MaxWidth="180" Foreground="White" FontSize="20" Grid.Row="0" Grid.Column="0" Margin="20,0" HorizontalAlignment="Left" Text="{Binding Path=Title}" VerticalAlignment="Center"/>
+					<Button 
+						Content ="X" 
+						Style="{StaticResource selectedItemDeselectBtn}"
+						Grid.Column="2"
+						Grid.Row="0"
+						Tag="8"/>
+					<Separator Background="White" MinHeight="2" Grid.ColumnSpan="2" Grid.Row="1"/>
+					<Expander Margin="10,0,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+						<Expander.Header>
+							<Label Foreground="White">Info</Label>
+						</Expander.Header>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+							</Grid.RowDefinitions>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,10,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Text="{Binding Path=Company, StringFormat=Vendor: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Text="{Binding Path=Purpose, StringFormat=Purpose: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Text="{Binding Path=Type, StringFormat=Type: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Text="Socket:"/>
+							<ListView Foreground="White" FontWeight="Normal" MaxWidth="260" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" ItemsSource="{Binding Path=Socket}" Background="{x:Null}" BorderBrush="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Padding="20,0,0,10" Grid.IsSharedSizeScope="True">
+								<ListView.ItemContainerStyle>
+									<Style TargetType="ListViewItem">
+										<Style.Setters>
+											<Setter Property="Template" Value="{StaticResource flatListBoxItem}"/>
+										</Style.Setters>
+									</Style>
+								</ListView.ItemContainerStyle>
+							</ListView>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7" Text="{Binding Path=Material, StringFormat=Material: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="260" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="8" Text="{Binding Path=TurnAdj, StringFormat=Turn adjustment: {0}}"/>
+						</Grid>
+					</Expander>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="CPUElementSelected">
+			<Border BorderBrush="White" MinWidth="100" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="2*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock TextWrapping="WrapWithOverflow" Foreground="White" FontSize="20" Margin="20,0,0,0" HorizontalAlignment="Left" Text="{Binding Path=Title}" VerticalAlignment="Center" MaxWidth="180" MinHeight="60"/>
+					<Button 
+						Content ="X" 
+						Style="{StaticResource selectedItemDeselectBtn}"
+						Grid.Column="2"
+						Grid.Row="0"
+						Tag="8"/>
+					<Separator Background="White" Grid.ColumnSpan="2" Grid.Row="1"/>
+					<Expander Margin="10,0,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+						<Expander.Header>
+							<Label Foreground="White">Info</Label>
+						</Expander.Header>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+							</Grid.RowDefinitions>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,10,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=Company, StringFormat=Vendor: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=Series, StringFormat=Series: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=Socket, StringFormat=Socket: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=Frequency,StringFormat=Frequecny: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=CoresAmount, StringFormat=Amount of cores: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=ThreadsAmount, StringFormat=Amount of threads: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=IntegratedGraphics, StringFormat=Integrated graphics: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=Core, StringFormat=Core: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=DeliveryType, StringFormat=Delivery type: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=Overcloacking, StringFormat=Overclocking: {0}}"/>
+						</Grid>
+					</Expander>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="HDDElementSelected">
+			<Border BorderBrush="White" MinWidth="100" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="2*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock TextWrapping="WrapWithOverflow" Foreground="White" FontSize="20" Margin="20,0" HorizontalAlignment="Left" Text="{Binding Path=Title}" VerticalAlignment="Center" MaxWidth="180"/>
+					<Button 
+						Content ="X" 
+						Style="{StaticResource selectedItemDeselectBtn}"
+						Grid.Column="2"
+						Grid.Row="0"
+						Tag="8"/>
+					<Separator Background="White" MinHeight="2" Grid.ColumnSpan="2" Grid.Row="1"/>
+					<Expander Margin="10,0,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+						<Expander.Header>
+							<Label Foreground="White">Info</Label>
+						</Expander.Header>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+							</Grid.RowDefinitions>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,10,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Text="{Binding Path=Company, StringFormat=Vendor: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Text="{Binding Path=Formfactor, StringFormat=Formfactor: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Text="{Binding Path=Capacity,StringFormat=Capacity: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Text="Interface:"/>
+							<ListView Foreground="White" FontWeight="Normal" MaxWidth="260" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" ItemsSource="{Binding Path=Interface}" Background="{x:Null}" BorderBrush="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Padding="20,0,0,10" Grid.IsSharedSizeScope="True">
+								<ListView.ItemContainerStyle>
+									<Style TargetType="ListViewItem">
+										<Style.Setters>
+											<Setter Property="Template" Value="{StaticResource flatListBoxItem}"/>
+										</Style.Setters>
+									</Style>
+								</ListView.ItemContainerStyle>
+							</ListView>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7" Text="{Binding Path=BufferVolume, StringFormat=Buffer volume: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="8" Text="{Binding Path=Speed, StringFormat=Speed: {0}}"/>
+						</Grid>
+					</Expander>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="MOTHERBOARDElementSelected">
+			<Border BorderBrush="White" MinWidth="100" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="2*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock TextWrapping="WrapWithOverflow" Foreground="White" FontSize="20" Grid.Column="0" Margin="20,0,0,0" HorizontalAlignment="Left" Text="{Binding Path=Title}" VerticalAlignment="Center" MaxWidth="180"/>
+					<Button 
+						Content ="X" 
+						Style="{StaticResource selectedItemDeselectBtn}"
+						Grid.Column="2"
+						Grid.Row="0"
+						Tag="8"/>
+					<Separator Background="White" MinHeight="2" Grid.Row="1" Grid.ColumnSpan="2"/>
+					<Expander Margin="10,0,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+						<Expander.Header>
+							<Label Foreground="White">Info</Label>
+						</Expander.Header>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+							</Grid.RowDefinitions>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,10,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Text="{Binding Path=Company, StringFormat=Vendor: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Text="{Binding Path=Series, StringFormat=Series: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Text="{Binding Path=Socket, StringFormat=Socket: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Text="{Binding Path=Chipset, StringFormat=Chipset: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7" Text="{Binding Path=Formfactor, StringFormat=Formfactor: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="8" Text="{Binding Path=Memory, StringFormat=Memory type: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="9" Text="{Binding Path=MemorySlotsAmount, StringFormat=Amount of memory slots: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="10" Text="{Binding Path=MemoryChanelsAmount,StringFormat=Amount of memory chanels: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="11" Text="{Binding Path=MaxMemory,StringFormat=Maximum memory: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="12" Text="{Binding Path=RAMMaxFreq, StringFormat=Maximum RAM frequency: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="12" Text="Slots:"/>
+							<ListView Foreground="White" FontWeight="Normal" MaxWidth="260" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="14" ItemsSource="{Binding Path=Slots}" Background="{x:Null}" BorderBrush="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Padding="20,0,0,10" Grid.IsSharedSizeScope="True">
+								<ListView.ItemContainerStyle>
+									<Style TargetType="ListViewItem">
+										<Style.Setters>
+											<Setter Property="Template" Value="{StaticResource flatListBoxItem}"/>
+										</Style.Setters>
+									</Style>
+								</ListView.ItemContainerStyle>
+							</ListView>
+						</Grid>
+					</Expander>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="RAMElementSelected">
+			<Border BorderBrush="White" MinWidth="100" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="2*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Foreground="White" FontSize="20" Grid.Column="0" Margin="20,0" HorizontalAlignment="Left" Text="{Binding Path=Title}" VerticalAlignment="Center" MaxWidth="180" TextWrapping="WrapWithOverflow"/>
+					<Button 
+						Content ="X" 
+						Style="{StaticResource selectedItemDeselectBtn}"
+						Grid.Column="2"
+						Grid.Row="0"
+						Tag="8"/>
+					<Separator Background="White" MinHeight="2" Grid.ColumnSpan="2" Grid.Row="1"/>
+					<Expander Margin="10,0,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+						<Expander.Header>
+							<Label Foreground="White">Info</Label>
+						</Expander.Header>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+							</Grid.RowDefinitions>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,10,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Text="{Binding Path=Company, StringFormat=Vendor: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Text="{Binding Path=Series, StringFormat=Series: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Text="{Binding Path=MemoryType, StringFormat=Memory type: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Text="{Binding Path=Purpose, StringFormat=Purpose: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" Text="{Binding Path=Volume, StringFormat=Volume: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7" Text="{Binding Path=ModuleAmount, StringFormat=Amount of modules: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="8" Text="{Binding Path=Freq, StringFormat=Frequency: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="9" Text="{Binding Path=CL, StringFormat=CAS Latency: {0}}"/>
+						</Grid>
+					</Expander>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="SSDElementSelected">
+			<Border BorderBrush="White" MinWidth="100" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="2*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock TextWrapping="WrapWithOverflow" Foreground="White" FontSize="20" Grid.Column="0" Margin="20,0" HorizontalAlignment="Left" Text="{Binding Path=Title}" MaxWidth="180" VerticalAlignment="Center"/>
+					<Button 
+						Content ="X" 
+						Style="{StaticResource selectedItemDeselectBtn}"
+						Grid.Column="2"
+						Grid.Row="0"
+						Tag="8"/>
+					<Separator Background="White" MinHeight="2" Grid.ColumnSpan="2" Grid.Row="1"/>
+					<Expander Margin="10,0,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+						<Expander.Header>
+							<Label Foreground="White">Info</Label>
+						</Expander.Header>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+							</Grid.RowDefinitions>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,10,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Text="{Binding Path=Company, StringFormat=Vendor: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Text="{Binding Path=Series, StringFormat=Series: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Text="{Binding Path=Capacity, StringFormat=Capacity: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Text="{Binding Path=Formfactor, StringFormat=Formfactor: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Text="Interfaces:"/>
+							<ListView Foreground="White" FontWeight="Normal" MaxWidth="260" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7" ItemsSource="{Binding Path=Interface}" Background="{x:Null}" BorderBrush="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Padding="20,0,0,10" Grid.IsSharedSizeScope="True">
+								<ListView.ItemContainerStyle>
+									<Style TargetType="ListViewItem">
+										<Style.Setters>
+											<Setter Property="Template" Value="{StaticResource flatListBoxItem}"/>
+										</Style.Setters>
+									</Style>
+								</ListView.ItemContainerStyle>
+							</ListView>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="8" Text="{Binding Path=CellType, StringFormat=Cell type: {0}}"/>
+						</Grid>
+					</Expander>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="VIDEOCARDElementSelected">
+			<Border BorderBrush="White" MinWidth="100" BorderThickness="1" CornerRadius="5" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch">
+				<Grid MinWidth="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="2*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock TextWrapping="WrapWithOverflow" Foreground="White" FontSize="20" Grid.Column="0"  Margin="20,0,0,0" HorizontalAlignment="Left" Text="{Binding Path=Title}" MaxWidth="180" VerticalAlignment="Center"/>
+					<Button 
+						Content ="X" 
+						Style="{StaticResource selectedItemDeselectBtn}"
+						Grid.Column="2"
+						Grid.Row="0"
+						Tag="8"/>
+					<Separator Background="White" MinHeight="2" Grid.ColumnSpan="2" Grid.Row="1"/>
+					<Expander Margin="10,0,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+						<Expander.Header>
+							<Label Foreground="White">Info</Label>
+						</Expander.Header>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+								<RowDefinition Height="1*"/>
+							</Grid.RowDefinitions>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,10,0,10" MaxWidth="250" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Text="{Binding Path=Company, StringFormat=Vendor: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="250" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Text="{Binding Path=Series, StringFormat=Series: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="250" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Text="{Binding Path=Proccessor, StringFormat=GPU: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="250" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Text="{Binding Path=VRAM, StringFormat=VRAM: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="250" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="6" Text="{Binding Path=Capacity, StringFormat=Capacity: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="250" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="7" Text="{Binding Path=Family, StringFormat=Family: {0}}"/>
+							<TextBlock TextWrapping="WrapWithOverflow" Margin="20,0,0,10" MaxWidth="250" Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="7" Text="Connectors:"/>
+							<ListView Foreground="White" FontWeight="Normal" MaxWidth="260" FontSize="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="9" ItemsSource="{Binding Path=Connector}" Background="{x:Null}" BorderBrush="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Padding="20,0,0,10" Grid.IsSharedSizeScope="True">
+								<ListView.ItemContainerStyle>
+									<Style TargetType="ListViewItem">
+										<Style.Setters>
+											<Setter Property="Template" Value="{StaticResource flatListBoxItem}"/>
+										</Style.Setters>
+									</Style>
+								</ListView.ItemContainerStyle>
+							</ListView>
+						</Grid>
+					</Expander>
+				</Grid>
+			</Border>
+		</DataTemplate>
+
+		<!--#endregion-->
+
+		<!--#endregion-->
+
+		<!--#region DANGEROUS-->
+
+		<Style x:Key="ScrollBarLineButtonStyle" TargetType="{x:Type RepeatButton}">
+			<Setter Property="Focusable" Value="False"/>
+			<!--<Setter Property="Visibility" Value="Collapsed"/>-->
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type RepeatButton}">
+						<Canvas Height="18">
+							<Polygon Fill="White" Effect="{StaticResource NotHover}" Points="3,15 15,15 9,3"></Polygon>
+						</Canvas>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="ScrollBarLineButtonBottomStyle" TargetType="{x:Type RepeatButton}">
+			<Setter Property="Focusable" Value="False"/>
+			<!--<Setter Property="Visibility" Value="Collapsed"/>-->
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type RepeatButton}">
+						<Canvas Height="18">
+							<Polygon Fill="White" Effect="{StaticResource NotHover}" Points="3,3 9,15 15,3"></Polygon>
+						</Canvas>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="ScrollBarPageButtonStyle" TargetType="{x:Type RepeatButton}">
+			<Setter Property="IsTabStop" Value="False"/>
+			<Setter Property="Focusable" Value="False"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type RepeatButton}">
+						<Border BorderBrush="Transparent"/>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="ScrollBarThumbStyle" TargetType="{x:Type Thumb}">
+			<Setter Property="IsTabStop" Value="False"/>
+			<Setter Property="Focusable" Value="False"/>
+			<Setter Property="Margin" Value="1,0,1,0" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Thumb}">
+						<Rectangle Fill="White" Effect="{StaticResource NotHover}" MinWidth="10" MinHeight="10" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Stretch"
+                                   RadiusX="2"
+                                   RadiusY="2"/>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition MaxHeight="18"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition MaxHeight="18"/>
+				</Grid.RowDefinitions>
+
+				<RepeatButton Grid.Row="0" Height="18"
+                          Style="{StaticResource ScrollBarLineButtonStyle}"
+                          Command="ScrollBar.LineUpCommand" >
+				</RepeatButton>
+				<Track Name="PART_Track" Grid.Row="1" 
+                   IsDirectionReversed="True">
+					<Track.DecreaseRepeatButton>
+						<RepeatButton Command="ScrollBar.PageUpCommand" Style="{StaticResource ScrollBarPageButtonStyle}">
+						</RepeatButton>
+					</Track.DecreaseRepeatButton>
+					<Track.Thumb>
+						<Thumb Style="{StaticResource ScrollBarThumbStyle}">
+						</Thumb>
+					</Track.Thumb>
+					<Track.IncreaseRepeatButton>
+						<RepeatButton Command="ScrollBar.PageDownCommand" Style="{StaticResource ScrollBarPageButtonStyle}">
+						</RepeatButton>
+					</Track.IncreaseRepeatButton>
+				</Track>
+				<RepeatButton Grid.Row="3" Height="18"
+                          Style="{StaticResource ScrollBarLineButtonBottomStyle}"
+                          Command="ScrollBar.LineDownCommand">
+				</RepeatButton>
+			</Grid>
+		</ControlTemplate>
+
+		<Style TargetType="{x:Type ScrollBar}">
+			<Setter Property="Template" Value="{StaticResource VerticalScrollBar}"/>
+		</Style>
+
+		<!--#endregion-->
+	</Window.Resources>
+	
+	
+
+	<WindowChrome.WindowChrome>
+		<WindowChrome CaptionHeight="0"
+                      ResizeBorderThickness="5"/>
+	</WindowChrome.WindowChrome>
+
+	<Grid x:Name="mainGrid" Background="#FF1E1E1E">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="1*"/>
+			<RowDefinition Height="3*"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="16*"/>
+		</Grid.RowDefinitions>
+
+		<!--#region Header panel-->
+
+		<Grid x:Name="header" Background="#FF2D2D30">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="8*"/>
+				<ColumnDefinition Width="12*"/>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+			</Grid.ColumnDefinitions>
+			<Label Style="{StaticResource headerLabel}" Content="Computer Complector Administrative Tool"/>
+			<Button Style="{StaticResource minimizeBtn}" Grid.Column="2" Click="MinimizeBtn_Click">
+				_
+				<Button.ToolTip>
+					<ToolTip>
+						Minimize
+					</ToolTip>
+				</Button.ToolTip>
+			</Button>
+			<Button Style="{StaticResource restoreBtn}" Grid.Column="3" Click="FullscreenBtn_Click">
+				<Button.ToolTip>
+					<ToolTip>
+
+					</ToolTip>
+				</Button.ToolTip>
+			</Button>
+			<Button Style="{StaticResource closeBtn}" Grid.Column="4" Click="CloseBtn_Click">
+				X
+				<Button.ToolTip>
+					<ToolTip>
+						Close
+					</ToolTip>
+				</Button.ToolTip>
+			</Button>
+		</Grid>
+		
+		<!--#endregion-->
+
+		<Grid x:Name="panelSelect" Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+			</Grid.ColumnDefinitions>
+			<Border Grid.Column="0">
+				<Border.Style>
+					<Style TargetType="Border" BasedOn="{StaticResource panelSelectButtonBorder}">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding SelectedPanel}" Value="Elements">
+								<DataTrigger.Setters>
+									<Setter Property="Effect" Value="{StaticResource SelectedLabel}"/>
+									<Setter Property="Background" Value="#66999999"/>
+								</DataTrigger.Setters>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Border.Style>
+				<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Template="{StaticResource flatBtn}" Command="{Binding ChangePanel}" CommandParameter="Elements">
+					<Label Foreground="White" FontSize="30">Elements</Label>
+				</Button>
+			</Border>
+			<Border Grid.Column="1">
+				<Border.Style>
+					<Style TargetType="Border" BasedOn="{StaticResource panelSelectButtonBorder}">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding SelectedPanel}" Value="Properties">
+								<DataTrigger.Setters>
+									<Setter Property="Effect" Value="{StaticResource SelectedLabel}"/>
+									<Setter Property="Background" Value="#66999999"/>
+								</DataTrigger.Setters>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Border.Style>
+				<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Template="{StaticResource flatBtn}" Command="{Binding ChangePanel}" CommandParameter="Properties">
+					<Label Foreground="White" FontSize="30">Properties</Label>
+				</Button>
+			</Border>
+			<Border Grid.Column="2">
+				<Border.Style>
+					<Style TargetType="Border" BasedOn="{StaticResource panelSelectButtonBorder}">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding SelectedPanel}" Value="Rules">
+								<DataTrigger.Setters>
+									<Setter Property="Effect" Value="{StaticResource SelectedLabel}"/>
+									<Setter Property="Background" Value="#66999999"/>
+								</DataTrigger.Setters>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Border.Style>
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Template="{StaticResource flatBtn}" Command="{Binding ChangePanel}" CommandParameter="Rules">
+					<Label Foreground="White" FontSize="30">Rules</Label>
+				</Button>
+			</Border>
+			<Border Grid.Column="3">
+				<Border.Style>
+					<Style TargetType="Border" BasedOn="{StaticResource panelSelectButtonBorder}">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding SelectedPanel}" Value="Statistics">
+								<DataTrigger.Setters>
+									<Setter Property="Effect" Value="{StaticResource SelectedLabel}"/>
+									<Setter Property="Background" Value="#66999999"/>
+								</DataTrigger.Setters>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Border.Style>
+				<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Template="{StaticResource flatBtn}" Command="{Binding ChangePanel}" CommandParameter="Statistics">
+					<Label Foreground="White" FontSize="30">Statistics</Label>
+				</Button>
+			</Border>
+		</Grid>
+
+		<Separator Grid.Row="2"/>
+
+		<Grid x:Name="elementsGrid" Grid.Row="3">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="5*"/>
+				<ColumnDefinition Width="2*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="9*"/>
+			</Grid.RowDefinitions>
+			<Grid.Style>
+				<Style TargetType="Grid">
+					<Style.Setters>
+						<Setter Property="Visibility" Value="Collapsed"/>
+					</Style.Setters>
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding Path=SelectedPanel}" Value="Elements">
+							<DataTrigger.Setters>
+								<Setter Property="Visibility" Value="Visible"/>
+							</DataTrigger.Setters>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</Grid.Style>
+			<Grid Grid.Row="0" Grid.ColumnSpan="2">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Border Grid.Column="0" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">Body</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="1" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">Cooler</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="2" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">Charger</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="3" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">CPU</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="4" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">HDD</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="5" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">Motherboard</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="6" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">RAM</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="7" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">SSD</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="8" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">Videocard</Label>
+					</Button>
+				</Border>
+			</Grid>
+			<ListBox
+				x:Name="ItemsListBox" 
+				Grid.Column="0"
+				Grid.Row="1">
+				<ListBox.Style>
+				<Style TargetType="ListBox">
+					<Style.Setters>
+						<Setter Property="ItemTemplate" Value="{StaticResource BODYElements}"/>
+						<Setter Property="ItemsSource" Value="{Binding Bodies}"/>
+						<Setter Property="Background" Value="{x:Null}"/>
+						<Setter Property="BorderBrush" Value="{x:Null}"/>
+						<Setter Property="Foreground" Value="{x:Null}"/>
+						<Setter Property="Margin" Value="0,10"/>
+						<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+						<Setter Property="VerticalContentAlignment" Value="Stretch"/>
+						<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
+						<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Visible"/>
+						<Setter Property="ScrollViewer.CanContentScroll" Value ="False"/>
+					</Style.Setters>
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding Path=SelectedTab}" Value="0">
+							<Setter Property="ItemTemplate" Value="{StaticResource CPUElements}"/>
+							<Setter Property="ItemsSource" Value="{Binding CPUs}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=SelectedTab}" Value="1">
+							<Setter Property="ItemTemplate" Value="{StaticResource MOTHERBOARDElements}"/>
+							<Setter Property="ItemsSource" Value="{Binding Motherboards}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=SelectedTab}" Value="2">
+							<Setter Property="ItemTemplate" Value="{StaticResource VIDEOCARDElements}"/>
+							<Setter Property="ItemsSource" Value="{Binding Videocards}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=SelectedTab}" Value="3">
+							<Setter Property="ItemTemplate" Value="{StaticResource RAMElements}"/>
+							<Setter Property="ItemsSource" Value="{Binding RAMs}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=SelectedTab}" Value="4">
+							<Setter Property="ItemTemplate" Value="{StaticResource CHARGERElements}"/>
+							<Setter Property="ItemsSource" Value="{Binding Chargers}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=SelectedTab}" Value="5">
+							<Setter Property="ItemTemplate" Value="{StaticResource COOLERElements}"/>
+							<Setter Property="ItemsSource" Value="{Binding Coolers}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=SelectedTab}" Value="6">
+							<Setter Property="ItemTemplate" Value="{StaticResource SSDElements}"/>
+							<Setter Property="ItemsSource" Value="{Binding SSDs}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=SelectedTab}" Value="7">
+							<Setter Property="ItemTemplate" Value="{StaticResource HDDElements}"/>
+							<Setter Property="ItemsSource" Value="{Binding HDDs}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=SelectedTab}" Value="8">
+							<Setter Property="ItemTemplate" Value="{StaticResource BODYElements}"/>
+							<Setter Property="ItemsSource" Value="{Binding Bodies}"/>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+				</ListBox.Style>
+				<ListBox.ItemContainerStyle>
+					<Style TargetType="ListBoxItem">
+						<Style.Setters>
+							<Setter Property="BorderBrush">
+								<Setter.Value>
+									<SolidColorBrush/>
+								</Setter.Value>
+							</Setter>
+							<Setter Property="BorderThickness" Value="0"/>
+							<Setter Property="Background">
+								<Setter.Value>
+									<SolidColorBrush/>
+								</Setter.Value>
+							</Setter>
+							<Setter Property="Effect" Value="{x:Null}"/>
+							<Setter Property="Margin" Value="0,0,0,5"/>
+							<Setter Property="Focusable" Value="False"/>
+							<Setter Property="Template" Value="{StaticResource flatListBoxItem}"/>
+						</Style.Setters>
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding IsSelected}" Value="True">
+								<DataTrigger.Setters>
+									<Setter Property="IsSelected" Value="True"/>
+								</DataTrigger.Setters>
+							</DataTrigger>
+							<DataTrigger Binding="{Binding Compatible}" Value="False">
+								<DataTrigger.Setters>
+									<Setter Property="Effect" Value="{StaticResource IncompatibleItem}"/>
+									<Setter Property="Background" Value="#11FFFFFF"/>
+								</DataTrigger.Setters>
+							</DataTrigger>
+							<Trigger Property="IsSelected" Value="True">
+								<Trigger.Setters>
+									<Setter Property="Effect" Value="{StaticResource SelectedItem}"/>
+									<Setter Property="Background" Value="#11FFFFFF"/>
+								</Trigger.Setters>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</ListBox.ItemContainerStyle>
+			</ListBox>
+		</Grid>
+		<Grid x:Name="propertiesGrid" Grid.Row="3">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="9*"/>
+			</Grid.RowDefinitions>
+			<Grid.Style>
+				<Style TargetType="Grid">
+					<Style.Setters>
+						<Setter Property="Visibility" Value="Collapsed"/>
+					</Style.Setters>
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding Path=SelectedPanel}" Value="Properties">
+							<DataTrigger.Setters>
+								<Setter Property="Visibility" Value="Visible"/>
+							</DataTrigger.Setters>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</Grid.Style>
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Border Grid.Column="0">
+					<Border.Style>
+						<Style TargetType="Border" BasedOn="{StaticResource panelSelectButtonBorder}">
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding SelectedTab}" Value="8">
+									<DataTrigger.Setters>
+										<Setter Property="Effect" Value="{StaticResource SelectedLabel}"/>
+										<Setter Property="Background" Value="#66999999"/>
+									</DataTrigger.Setters>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</Border.Style>
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Template="{StaticResource flatBtn}">
+						<Label Foreground="White">Body</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="1" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">Cooler</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="2" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">Charger</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="3" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">CPU</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="4" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">HDD</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="5" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">Motherboard</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="6" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">RAM</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="7" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">SSD</Label>
+					</Button>
+				</Border>
+				<Border Grid.Column="8" Style="{StaticResource panelSelectButtonBorder}">
+					<Button Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+						<Label Foreground="White">Videocard</Label>
+					</Button>
+				</Border>
+			</Grid>
+			<Grid Grid.Row="1">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+
+				<Border Grid.Column="0" BorderBrush="White" BorderThickness="1" CornerRadius="10" Margin="20">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="3"/>
+							<RowDefinition Height="7*"/>
+							<RowDefinition Height="3"/>
+							<RowDefinition Height="2*"/>
+						</Grid.RowDefinitions>
+						<Label Grid.Row="0" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24">Property</Label>
+						<Separator Grid.Row="1"/>
+						<ListView Grid.Row="2" Background="{x:Null}">
+							
+						</ListView>
+						<Separator Grid.Row="3"/>
+						<Grid>
+							
+						</Grid>
+					</Grid>
+				</Border>
+				<Border Grid.Column="1" BorderBrush="White" BorderThickness="1" CornerRadius="10" Margin="20">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="3"/>
+							<RowDefinition Height="7*"/>
+							<RowDefinition Height="3"/>
+							<RowDefinition Height="2*"/>
+						</Grid.RowDefinitions>
+						<Label Grid.Row="0" Foreground="White" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+							Value
+						</Label>
+						<Separator Grid.Row="1"/>
+						<ListView Grid.Row="2" Background="{x:Null}"/>
+						<Separator Grid.Row="3"/>
+						<Grid Grid.Row="4"></Grid>
+					</Grid>
+				</Border>
+			</Grid>
+		</Grid>
+		<Grid x:Name="rulesGrid" Grid.Row="3">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.Style>
+				<Style TargetType="Grid">
+					<Style.Setters>
+						<Setter Property="Visibility" Value="Collapsed"/>
+					</Style.Setters>
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding Path=SelectedPanel}" Value="Rules">
+							<DataTrigger.Setters>
+								<Setter Property="Visibility" Value="Visible"/>
+							</DataTrigger.Setters>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</Grid.Style>
+		</Grid>
+		<Grid x:Name="statisticsGrid" Grid.Row="3">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="9*"/>
+			</Grid.RowDefinitions>
+			<Grid.Style>
+				<Style TargetType="Grid">
+					<Style.Setters>
+						<Setter Property="Visibility" Value="Collapsed"/>
+					</Style.Setters>
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding Path=SelectedPanel}" Value="Statistics">
+							<DataTrigger.Setters>
+								<Setter Property="Visibility" Value="Visible"/>
+							</DataTrigger.Setters>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</Grid.Style>
+		</Grid>
+	</Grid>
+</Window>

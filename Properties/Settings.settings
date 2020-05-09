@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ComputerComplectorAdministrativeTool.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ServiceConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://localhost:44346/api/components</Value>
+    </Setting>
+    <Setting Name="Culture" Type="System.String" Scope="User">
+      <Value Profile="(Default)">en</Value>
+    </Setting>
+    <Setting Name="AuthentificationConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://localhost:44346/users</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
