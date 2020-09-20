@@ -2,14 +2,35 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ComputerComplectorAdministrativeTool.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ServiceConnectionString" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://localhost:44346/api/components</Value>
+    <Setting Name="APIURIString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://localhost:44346</Value>
     </Setting>
     <Setting Name="Culture" Type="System.String" Scope="User">
       <Value Profile="(Default)">en</Value>
     </Setting>
-    <Setting Name="AuthentificationConnectionString" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://localhost:44346/users</Value>
+    <Setting Name="AuthentificationRequestFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{0}/users</Value>
+    </Setting>
+    <Setting Name="RememberLogin" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Login" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Key" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="IV" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ComponentsRequestFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{0}/api/components</Value>
+    </Setting>
+    <Setting Name="StatisticsRequestFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{0}/api/statistics</Value>
     </Setting>
   </Settings>
 </SettingsFile>

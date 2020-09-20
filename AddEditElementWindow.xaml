@@ -1,4 +1,5 @@
-﻿<Window x:Class="ComputerComplectorAdministrativeTool.AddEditElementWindow"
+﻿<Window x:Name="MainWindow"
+	x:Class="ComputerComplectorAdministrativeTool.AddEditElementWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,12 +7,53 @@
         xmlns:local="clr-namespace:ComputerComplectorAdministrativeTool"
         mc:Ignorable="d"
         Title="AddEditElementWindow" 
-		Width="410" 
+		Width="600" 
 		ResizeMode="NoResize" 
 		WindowStyle="None"
 		Background="Transparent" WindowStartupLocation="CenterScreen" Height="530">
 	
 	<Window.Resources>
+		<local:ArrayToSymbolSeparatedStringConverter x:Key="ArrayToStringConverter"/>
+		<local:ListOfStringGenericToSymbolSeparatedStringConverter x:Key="ListToStringConverter"/>
+
+		<ControlTemplate x:Key="flatListBoxItem" 
+			TargetType="ListBoxItem">
+			<Border 
+				Width="{TemplateBinding Width}"
+				Height="{TemplateBinding Height}"
+				Background="{TemplateBinding Background}"
+				BorderBrush="{TemplateBinding BorderBrush}"
+				BorderThickness="{TemplateBinding BorderThickness}">
+				<ContentPresenter 
+					HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+					VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+					TextElement.Foreground="{TemplateBinding Foreground}"
+					TextElement.FontFamily="{TemplateBinding FontFamily}"
+					TextElement.FontSize="{TemplateBinding FontSize}"
+					TextElement.FontStretch="{TemplateBinding FontStretch}"
+					TextElement.FontWeight="{TemplateBinding FontWeight}"/>
+			</Border>
+		</ControlTemplate>
+
+		<ControlTemplate x:Key="flatBtn" 
+			TargetType="Button">
+			<Border 
+				Width="{TemplateBinding Width}"
+				Height="{TemplateBinding Height}"
+				Background="{TemplateBinding Background}"
+				BorderBrush="{TemplateBinding BorderBrush}"
+				BorderThickness="{TemplateBinding BorderThickness}">
+				<ContentPresenter 
+					HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                    TextElement.Foreground="{TemplateBinding Foreground}"
+                    TextElement.FontFamily="{TemplateBinding FontFamily}"
+                    TextElement.FontSize="{TemplateBinding FontSize}"
+                    TextElement.FontStretch="{TemplateBinding FontStretch}"
+                    TextElement.FontWeight="{TemplateBinding FontWeight}"/>
+			</Border>
+		</ControlTemplate>
+		
 		<Style TargetType="Border" x:Key="panelBorder">
 			<Style.Setters>
 				<Setter Property="BorderBrush" Value="#FF2D2D30"/>
@@ -32,7 +74,17 @@
 				<Setter Property="Background" Value="{x:Null}"/>
 				<Setter Property="BorderBrush" Value="{x:Null}"/>
 				<Setter Property="FontSize" Value="18"/>
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="Template" Value="{StaticResource flatBtn}"/>
+				<Setter Property="Cursor" Value="Hand"/>
 			</Style.Setters>
+			<Style.Triggers>
+				<Trigger Property="IsEnabled" Value="False">
+					<Trigger.Setters>
+						<Setter Property="Cursor" Value="Arrow"/>
+					</Trigger.Setters>
+				</Trigger>
+			</Style.Triggers>
 		</Style>
 
 		<Style TargetType="Button" x:Key="yesBtn" BasedOn="{StaticResource btnBase}">
@@ -40,12 +92,22 @@
 				<Setter Property="Margin" Value="5, 10, 15, 15"/>
 			</Style.Setters>
 		</Style>
+		
 		<Style TargetType="Button" x:Key="noBtn" BasedOn="{StaticResource btnBase}">
 			<Style.Setters>
 				<Setter Property="Margin" Value="15, 10, 5, 15"/>
 			</Style.Setters>
 		</Style>
 
+		<Style TargetType="Border" x:Key="btnBorder">
+			<Style.Setters>
+				<Setter Property="Margin" Value="5"/>
+				<Setter Property="BorderBrush" Value="White"/>
+				<Setter Property="BorderThickness" Value="1"/>
+				<Setter Property="CornerRadius" Value="10"/>
+			</Style.Setters>
+		</Style>
+		
 		<Style x:Key="formLabel" TargetType="Label">
 			<Style.Setters>
 				<Setter Property="Foreground" Value="White"/>
@@ -59,7 +121,8 @@
 			TargetType="TextBox">
 			<Style.Setters>
 				<Setter Property="Background" Value="#CC000000"/>
-				<Setter Property="BorderBrush" Value="{x:Null}"/>
+				<Setter Property="BorderBrush" Value="#FFFFFFFF"/>
+				<Setter Property="BorderThickness" Value="1"/>
 				<Setter Property="VerticalContentAlignment" Value="Center"/>
 				<Setter Property="Foreground" Value="White"/>
 				<Setter Property="Template">
@@ -101,7 +164,7 @@
                       ResizeBorderThickness="5"/>
 	</WindowChrome.WindowChrome>
 
-	<Grid Width="400" Height="520">
+	<Grid Width="600" Height="520">
 		<Grid.Effect>
 			<DropShadowEffect Direction="360" ShadowDepth="0" BlurRadius="10" RenderingBias="Quality"></DropShadowEffect>
 		</Grid.Effect>
@@ -113,12 +176,12 @@
 
 			<Grid x:Name="header" Background="#FF2D2D30">
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="5*"/>
 					<ColumnDefinition Width="1*"/>
 					<ColumnDefinition Width="1*"/>
 					<ColumnDefinition Width="1*"/>
 				</Grid.ColumnDefinitions>
-				<Label Foreground="White" Margin="20,0,0,0" VerticalAlignment="Center" FontWeight="Bold" Content="{Binding Path=Title}"/>
+				<Label Foreground="White" Margin="20,0,0,0" FontWeight="Bold" Content="{Binding Path=Element.Title}"/>
 				<Button Grid.Column="2" Margin="10,0,10,5" BorderBrush="{x:Null}" FontWeight="Bold" Click="MinimizeBtn_Click">
 					_
 					<Button.Style>
@@ -159,7 +222,12 @@
 						</ToolTip>
 					</Button.ToolTip>
 				</Button>
-				<Button Grid.Column="3" Margin="10,0,10,5" BorderBrush="{x:Null}" FontWeight="Bold" Click="CloseBtn_Click">
+				<Button x:Name="closeButton"
+					Grid.Column="3" 
+					Margin="10,0,10,5" 
+					BorderBrush="{x:Null}" 
+					FontWeight="Bold"
+					Command="{Binding Path=CloseModelEdit}">
 					X
 					<Button.Style>
 						<Style TargetType="Button">
@@ -200,7 +268,7 @@
 					</Button.ToolTip>
 				</Button>
 			</Grid>
-			<Grid Grid.Row="1" Margin="5">
+			<Grid x:Name="main" Grid.Row="1" Margin="5">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="1*"/>
 					<ColumnDefinition Width="1*"/>
@@ -220,11 +288,28 @@
 						FontSize="20" 
 						Margin="5" 
 						HorizontalAlignment="Stretch" 
-						Text="{Binding Path=Title}" 
+						Text="{Binding Path=Element.Title, Mode=TwoWay}" 
 						VerticalAlignment="Center"/>
-				<StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,0,20">
-					<Separator Background="White" MinHeight="2"/>
-					<Grid>
+				<Grid x:Name="ModelDisplayGrid" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="0*"/>
+						<ColumnDefinition Width="0*"/>
+						<ColumnDefinition Width="0*"/>
+						<ColumnDefinition Width="0*"/>
+						<ColumnDefinition Width="0*"/>
+						<ColumnDefinition Width="0*"/>
+						<ColumnDefinition Width="0*"/>
+						<ColumnDefinition Width="0*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+
+					<Grid x:Name="BodyDisplayGrid" 
+						  Grid.Column="0"
+						  DataContext="{Binding Path=Element}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="2*"/>
+						</Grid.ColumnDefinitions>
 						<Grid.RowDefinitions>
 							<RowDefinition Height="1*"/>
 							<RowDefinition Height="1*"/>
@@ -240,88 +325,728 @@
 							<RowDefinition Height="1*"/>
 							<RowDefinition Height="1*"/>
 						</Grid.RowDefinitions>
-						<Grid Grid.ColumnSpan="2" Margin="0,0,0,10">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="1*"/>
-								<ColumnDefinition Width="2*"/>
-							</Grid.ColumnDefinitions>
-							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="0" Content="Company:"/>
-							<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=Company, Mode=TwoWay}" Style="{StaticResource elementTextBox}"></TextBox>
-						</Grid>
-
-						<Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,10">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="1*"/>
-								<ColumnDefinition Width="2*"/>
-							</Grid.ColumnDefinitions>
-							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="1" Content="Formfactor:"/>
-							<TextBox Style="{StaticResource elementTextBox}" Grid.Column="1" Grid.Row="1" Text="{Binding Path=Formfactor}"/>
-						</Grid>
-
-						<Grid Grid.Row="2" Grid.ColumnSpan="2" Margin="0,0,0,10">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="1*"/>
-								<ColumnDefinition Width="2*"/>
-							</Grid.ColumnDefinitions>
-							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="2" Content="Type:"/>
-							<TextBox Style="{StaticResource elementTextBox}" Grid.Column="1" Grid.Row="2" Text="{Binding Path=Type}"/>
-						</Grid>
-
-						<Grid Grid.Row="3" Grid.ColumnSpan="2" Margin="0,0,0,10">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="1*"/>
-								<ColumnDefinition Width="2*"/>
-							</Grid.ColumnDefinitions>
-							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="3" Content="Build-in charger:"/>
-							<TextBox Style="{StaticResource elementTextBox}" Grid.Column="1" Grid.Row="3" Text="{Binding Path=BuildInCharger}"/>
-						</Grid>
-
-						<Grid Grid.Row="4" Grid.ColumnSpan="2" Margin="0,0,0,10">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="1*"/>
-								<ColumnDefinition Width="2*"/>
-							</Grid.ColumnDefinitions>
-							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="4" Content="ChargerPower:"/>
-							<TextBox Style="{StaticResource elementTextBox}" Grid.Column="1" Grid.Row="4" Text="{Binding StringFormat={}{0} Wt, Path=ChargerPower}"/>
-						</Grid>
-
-						<Grid Grid.Row="5" Grid.ColumnSpan="2" Margin="0,0,0,10">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="1*"/>
-								<ColumnDefinition Width="2*"/>
-							</Grid.ColumnDefinitions>
-							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="5" Content="Color:"/>
-							<TextBox Style="{StaticResource elementTextBox}" Grid.Column="1" Grid.Row="5" Text="{Binding Path=Color}"/>
-						</Grid>
-
-						<Grid Grid.Row="6" Grid.ColumnSpan="2" Margin="0,0,0,10">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="1*"/>
-								<ColumnDefinition Width="2*"/>
-							</Grid.ColumnDefinitions>
-							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="6" Content="USB 2.0 ports:"/>
-							<TextBox Style="{StaticResource elementTextBox}" Grid.Column="1" Grid.Row="6" Text="{Binding Path=USB2Ports}"/>
-						</Grid>
-
-						<Grid Grid.Row="7" Grid.ColumnSpan="2" Margin="0,0,0,10">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="1*"/>
-								<ColumnDefinition Width="2*"/>
-							</Grid.ColumnDefinitions>
-							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="7" Content="USB 3.0 ports:"/>
-							<TextBox Style="{StaticResource elementTextBox}" Grid.Column="1" Grid.Row="7" Text="{Binding Path=USB3Ports}"/>
-						</Grid>
-
-						<Grid Grid.Row="8" Grid.ColumnSpan="2" Margin="0,0,0,10">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="1*"/>
-								<ColumnDefinition Width="2*"/>
-							</Grid.ColumnDefinitions>
-							<Label Style="{StaticResource elementExpanderLabel}" Grid.Column="0" Grid.Row="8" Content="Additions:"/>
-							<TextBlock Foreground="White" FontSize="18" Grid.Column="1" Grid.Row="8" TextWrapping="WrapWithOverflow" Text="{Binding Path=Additions}"/>
-						</Grid>
+						<Label 
+							Style="{StaticResource elementExpanderLabel}" 
+							Grid.Column="0" 
+							Grid.Row="0" 
+							Content="Company:"/>
+						<TextBox 
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="0" 
+							Text="{Binding Path=Company, Mode=TwoWay}"/>
+						<Label 
+							Style="{StaticResource elementExpanderLabel}" 
+							Grid.Column="0" 
+							Grid.Row="1" 
+							Content="Formfactor:"/>
+						<TextBox 
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="1">
+							<TextBox.Text>
+								<Binding 
+									Path="Formfactor" 
+									Mode="TwoWay" 
+									Converter="{StaticResource ListToStringConverter}" 
+									ConverterParameter=" "/>
+							</TextBox.Text>
+						</TextBox>
+						<Label 
+							Style="{StaticResource elementExpanderLabel}" 
+							Grid.Column="0" 
+							Grid.Row="2" 
+							Content="Type:"/>
+						<TextBox 
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="2" 
+							Text="{Binding Path=Type, Mode=TwoWay}"/>
+						<Label 
+							Style="{StaticResource elementExpanderLabel}" 
+							Grid.Column="0" 
+							Grid.Row="3" 
+							Content="Build-in charger:"/>
+						<TextBox 
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="3" 
+							Text="{Binding Path=BuildInCharger, Mode=TwoWay}"/>
+						<Label 
+							Style="{StaticResource elementExpanderLabel}" 
+							Grid.Column="0" 
+							Grid.Row="4" 
+							Content="ChargerPower:"/>
+						<TextBox 
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="4" 
+							Text="{Binding Path=ChargerPower, Mode=TwoWay}"/>
+						<Label 
+							Style="{StaticResource elementExpanderLabel}" 
+							Grid.Column="0" 
+							Grid.Row="5" 
+							Content="Color:"/>
+						<TextBox 
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="5" 
+							Text="{Binding Path=Color, Mode=TwoWay}"/>
+						<Label 
+							Style="{StaticResource elementExpanderLabel}" 
+							Grid.Column="0" 
+							Grid.Row="6" 
+							Content="USB 2.0 ports:"/>
+						<TextBox 
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="6" 
+							Text="{Binding Path=USB2Ports, Mode=TwoWay}"/>
+						<Label 
+							Style="{StaticResource elementExpanderLabel}" 
+							Grid.Column="0" 
+							Grid.Row="7" 
+							Content="USB 3.0 ports:"/>
+						<TextBox 
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="7" 
+							Text="{Binding Path=USB3Ports, Mode=TwoWay}"/>
+						<Label 
+							Style="{StaticResource elementExpanderLabel}" 
+							Grid.Column="0" 
+							Grid.Row="8" 
+							Content="Additions:"/>
+						<TextBox 
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="8" 
+							Text="{Binding Path=Additions, Mode=TwoWay}"/>
 					</Grid>
-				</StackPanel>
+
+					<Grid x:Name="ChargerDisplayGrid" 
+						  Grid.Column="1"
+						  DataContext="{Binding Path=Element}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="2*"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+						</Grid.RowDefinitions>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:" VerticalAlignment="Center"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="0" 
+							Text="{Binding Path=Company, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Series:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="1" 
+							Text="{Binding Path=Series, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Power:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="2" 
+							Text="{Binding Path=Power, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="Sertificate 80 Plus:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="3" 
+							Text="{Binding Path=Sertificate, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="Video connectors:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="4" 
+							Text="{Binding Path=VideoConnectorsAmount, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Connector type:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="5" 
+							Text="{Binding Path=ConnectorType, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="6" Content="SATA:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="6" 
+							Text="{Binding Path=SATAAmount, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="7" Content="IDE:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="7" 
+							Text="{Binding Path=IDEAmount, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="8" Content="Motherboard connector:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="8" 
+							Text="{Binding Path=MotherboardConnector, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="9" Content="Additions:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="9" 
+							Text="{Binding Path=Additions, Mode=TwoWay}"/>
+					</Grid>
+
+					<Grid x:Name="CoolerDisplayGrid" 
+						  Grid.Column="2"
+						  DataContext="{Binding Path=Element}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="2*"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+						</Grid.RowDefinitions>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="0" 
+							Text="{Binding Path=Company, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Purpose:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="1" 
+							Text="{Binding Path=Purpose, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Type:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="2" 
+							Text="{Binding Path=Type, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="Socket:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="3" >
+							<TextBox.Text>
+								<Binding 
+									Path="Socket" 
+									Mode="TwoWay" 
+									Converter="{StaticResource ListToStringConverter}" 
+									ConverterParameter=" "/>
+							</TextBox.Text>
+						</TextBox>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="Material:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="4" 
+							Text="{Binding Path=Material, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Ventilator diameter:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="5" 
+							Text="{Binding Path=VentDiam, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="6" Content="Turn adjustment:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="6" 
+							Text="{Binding Path=TurnAdj, Mode=TwoWay}"/>
+					</Grid>
+
+					<Grid x:Name="CPUDisplayGrid" 
+						  Grid.Column="3"
+						  DataContext="{Binding Path=Element}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="2*"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+						</Grid.RowDefinitions>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="0" 
+							Text="{Binding Path=Company, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="1" Grid.Column="0" Content="Series:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="1" 
+							Text="{Binding Path=Series, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="2" Grid.Column="0" Content="Socket:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="2" 
+							Text="{Binding Path=Socket, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="3" Grid.Column="0" Content="Frequency:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="3" 
+							Text="{Binding Path=Frequency, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="4" Grid.Column="0" Content="Cores:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="4" 
+							Text="{Binding Path=CoresAmount, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="5" Grid.Column="0" Content="Threads:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="5" 
+							Text="{Binding Path=ThreadsAmount, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="6" Grid.Column="0" Content="Integrated graphics:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="6" 
+							Text="{Binding Path=IntegratedGraphics, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="7" Grid.Column="0" Content="Core:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="7" 
+							Text="{Binding Path=Core, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="8" Grid.Column="0" Content="Delivery type:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="8" 
+							Text="{Binding Path=DeliveryType, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Row="9" Grid.Column="0" Content="Overcloacking:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="9" 
+							Text="{Binding Path=Overcloacking, Mode=TwoWay}"/>
+					</Grid>
+
+					<Grid x:Name="HDDDisplayGrid" 
+						  Grid.Column="4"
+						  DataContext="{Binding Path=Element}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="2*"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+						</Grid.RowDefinitions>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="0" 
+							Text="{Binding Path=Company, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Formfactor:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="1" 
+							Text="{Binding Path=Formfactor, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Capacity:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="2" 
+							Text="{Binding Path=Capacity, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="Interface:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="3">
+							<TextBox.Text>
+								<Binding 
+									Path="Interface" 
+									Mode="TwoWay" 
+									Converter="{StaticResource ListToStringConverter}" 
+									ConverterParameter=" "/>
+							</TextBox.Text>
+						</TextBox>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="Buffer volume:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="4" 
+							Text="{Binding Path=BufferVolume, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Speed:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="5" 
+							Text="{Binding Path=Speed, Mode=TwoWay}"/>
+					</Grid>
+
+					<Grid x:Name="MotherboardDisplayGrid" 
+						  Grid.Column="5"
+						  DataContext="{Binding Path=Element}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="2*"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+						</Grid.RowDefinitions>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="0" 
+							Text="{Binding Path=Company, Mode=TwoWay}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Series:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="1" 
+							Text="{Binding Path=Series}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Socket:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="2" 
+							Text="{Binding Path=Socket}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="Chipset:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="3" 
+							Text="{Binding Path=Chipset}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="CPU company:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="4" 
+							Text="{Binding Path=CPUCompany}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Formfactor:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="5" 
+							Text="{Binding Path=Formfactor}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="6" Content="Memorys:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="6" 
+							Text="{Binding Path=Memory}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="7" Content="Memory slots:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="7" 
+							Text="{Binding Path=MemorySlotsAmount}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="8" Content="MemoryChanels:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="8" 
+							Text="{Binding Path=MemoryChanelsAmount}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="9" Content="Maximum memory:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="9" 
+							Text="{Binding Path=MaxMemory}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="10" Content="Ram max frequency:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="10" 
+							Text="{Binding Path=RAMMaxFreq}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="11" Content="Slots:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="11">
+							<TextBox.Text>
+								<Binding 
+									Path="Slots" 
+									Converter="{StaticResource ListToStringConverter}" 
+									ConverterParameter=" "/>
+							</TextBox.Text>
+						</TextBox>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="12" Content="Additions:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="12" 
+							Text="{Binding Path=Additions}"/>
+					</Grid>
+
+					<Grid x:Name="RAMDisplayGrid" 
+						  Grid.Column="6"
+						  DataContext="{Binding Path=Element}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="2*"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+						</Grid.RowDefinitions>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="0" 
+							Text="{Binding Path=Company}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Series:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="1" 
+							Text="{Binding Path=Series}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Memory type:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="2" 
+							Text="{Binding Path=MemoryType}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Purpose:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="3" 
+							Text="{Binding Path=Purpose}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="Volume:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="4" 
+							Text="{Binding Path=Volume}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="Modules amount:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="5" 
+							Text="{Binding Path=ModuleAmount}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="6" Content="Frequency:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="6" 
+							Text="{Binding Path=Freq}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="7" Content="CAS latency:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="7" 
+							Text="{Binding Path=CL}"/>
+					</Grid>
+
+					<Grid x:Name="SSDDisplayGrid" 
+						  Grid.Column="7"
+						  DataContext="{Binding Path=Element}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="2*"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+						</Grid.RowDefinitions>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="0" 
+							Text="{Binding Path=Company}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Series:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="1" 
+							Text="{Binding Path=Series}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Capacity:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="2" 
+							Text="{Binding Path=Capacity}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="Formfactor:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="3" 
+							Text="{Binding Path=Formfactor}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="Interface:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="4">
+							<TextBox.Text>
+								<Binding 
+									Path="Interface" 
+									Converter="{StaticResource ListToStringConverter}" 
+									ConverterParameter=" "/>
+							</TextBox.Text>
+						</TextBox>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Cell type:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="5" 
+							Text="{Binding Path=CellType}"/>
+					</Grid>
+
+					<Grid x:Name="VideocardDisplayGrid" 
+						  Grid.Column="8"
+						  DataContext="{Binding Path=Element}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="2*"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+						</Grid.RowDefinitions>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="0" Content="Company:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="0" 
+							Text="{Binding Path=Company}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="1" Content="Series:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="1" 
+							Text="{Binding Path=Series}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="2" Content="Proccessor:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="2" 
+							Text="{Binding Path=Proccessor}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="3" Content="VRAM:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="3" 
+							Text="{Binding Path=VRAM}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="4" Content="Capacity:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="4" 
+							Text="{Binding Path=Capacity}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="5" Content="Family:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="5" 
+							Text="{Binding Path=Family}"/>
+						<Label Foreground="White" FontWeight="Normal" FontSize="18" Grid.Column="0" Grid.Row="6" Content="Connector:"/>
+						<TextBox
+							Margin="2" 
+							Grid.Column="1" 
+							Grid.Row="6">
+							<TextBox.Text>
+								<Binding 
+									Path="Connector" 
+									Converter="{StaticResource ListToStringConverter}" 
+									ConverterParameter=" "/>
+							</TextBox.Text>
+						</TextBox>
+					</Grid>
+				</Grid>
 				<Grid Grid.Row="2" Grid.ColumnSpan="2">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="3"/>
@@ -333,8 +1058,21 @@
 							<ColumnDefinition Width="1*"/>
 							<ColumnDefinition Width="1*"/>
 						</Grid.ColumnDefinitions>
-						<Button Margin="5" Grid.Column="0">Decline</Button>
-						<Button Margin="5" Grid.Column="1">Accept</Button>
+						<Border Grid.Column="0" Style="{StaticResource btnBorder}" Background="#33CC0000">
+							<Button x:Name="DeclineButton"
+								Margin="0" 
+								Style="{StaticResource noBtn}"
+								Content="Decline"
+								Command="{Binding Path=DeclineChanges}"/>
+						</Border>
+						<Border Grid.Column="1" Style="{StaticResource btnBorder}">
+							<Button x:Name="ApplyButton"
+								Margin="0" 
+								Grid.Column="1" 
+								Style="{StaticResource yesBtn}"
+								Content="Accept"
+								Command="{Binding Path=ApplyChanges}"/>
+						</Border>
 					</Grid>
 				</Grid>
 			</Grid>

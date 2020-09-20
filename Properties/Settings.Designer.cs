@@ -25,13 +25,13 @@ namespace ComputerComplectorAdministrativeTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44346/api/components")]
-        public string ServiceConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44346")]
+        public string APIURIString {
             get {
-                return ((string)(this["ServiceConnectionString"]));
+                return ((string)(this["APIURIString"]));
             }
             set {
-                this["ServiceConnectionString"] = value;
+                this["APIURIString"] = value;
             }
         }
         
@@ -49,13 +49,97 @@ namespace ComputerComplectorAdministrativeTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44346/users")]
-        public string AuthentificationConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("{0}/users")]
+        public string AuthentificationRequestFormat {
             get {
-                return ((string)(this["AuthentificationConnectionString"]));
+                return ((string)(this["AuthentificationRequestFormat"]));
             }
             set {
-                this["AuthentificationConnectionString"] = value;
+                this["AuthentificationRequestFormat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RememberLogin {
+            get {
+                return ((bool)(this["RememberLogin"]));
+            }
+            set {
+                this["RememberLogin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Login {
+            get {
+                return ((string)(this["Login"]));
+            }
+            set {
+                this["Login"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Password {
+            get {
+                return ((string)(this["Password"]));
+            }
+            set {
+                this["Password"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Key {
+            get {
+                return ((string)(this["Key"]));
+            }
+            set {
+                this["Key"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IV {
+            get {
+                return ((string)(this["IV"]));
+            }
+            set {
+                this["IV"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{0}/api/components")]
+        public string ComponentsRequestFormat {
+            get {
+                return ((string)(this["ComponentsRequestFormat"]));
+            }
+            set {
+                this["ComponentsRequestFormat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{0}/api/statistics")]
+        public string StatisticsRequestFormat {
+            get {
+                return ((string)(this["StatisticsRequestFormat"]));
+            }
+            set {
+                this["StatisticsRequestFormat"] = value;
             }
         }
     }

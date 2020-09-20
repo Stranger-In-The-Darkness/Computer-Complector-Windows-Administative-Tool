@@ -16,19 +16,18 @@ using ViewModel.Interfaces;
 
 namespace ComputerComplectorAdministrativeTool
 {
-	public enum ElementWindowAction
-	{
-		Add,
-		Edit,
-		None
-	}
-
     /// <summary>
     /// Логика взаимодействия для AddEditElementWindow.xaml
     /// </summary>
-    public partial class AddEditElementWindow : Window
+    public partial class AddEditRuleWindow : Window
     {
 		private IModelEditor _viewModel;
+
+		private string[] _relations;
+
+		private Tuple<string, string>[] _firstComponentDescription;
+
+		private Tuple<string, string>[] _secondComponentDescription;
 
 		private ElementWindowAction _action;
 
@@ -36,81 +35,34 @@ namespace ComputerComplectorAdministrativeTool
 
 		public string ModelType { get; private set; }
 
-        public AddEditElementWindow()
+        public AddEditRuleWindow()
         {
             InitializeComponent();
         }
 
-		public AddEditElementWindow(ElementWindowAction action) : this()
+		public AddEditRuleWindow(ElementWindowAction action) : this()
 		{
 			_action = action;
 		}
 
-		public AddEditElementWindow(ElementWindowAction action, string modelType) : this(action)
-		{
-			ModelType = modelType;
-
-			foreach (var column in ModelDisplayGrid.ColumnDefinitions)
-			{
-				column.Width = new GridLength(0, GridUnitType.Star);
-			}
-
-			switch (modelType)
-			{
-				case "body":
-				{
-					ModelDisplayGrid.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
-					break;
-				}
-				case "charger":
-				{
-					ModelDisplayGrid.ColumnDefinitions[1].Width = new GridLength(1, GridUnitType.Star);
-					break;
-				}
-				case "cooler":
-				{
-					ModelDisplayGrid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
-					break;
-				}
-				case "cpu":
-				{
-					ModelDisplayGrid.ColumnDefinitions[3].Width = new GridLength(1, GridUnitType.Star);
-					break;
-				}
-				case "hdd":
-				{
-					ModelDisplayGrid.ColumnDefinitions[4].Width = new GridLength(1, GridUnitType.Star);
-					break;
-				}
-				case "motherboard":
-				{
-					ModelDisplayGrid.ColumnDefinitions[5].Width = new GridLength(1, GridUnitType.Star);
-					break;
-				}
-				case "ram":
-				{
-					ModelDisplayGrid.ColumnDefinitions[6].Width = new GridLength(1, GridUnitType.Star);
-					break;
-				}
-				case "ssd":
-				{
-					ModelDisplayGrid.ColumnDefinitions[7].Width = new GridLength(1, GridUnitType.Star);
-					break;
-				}
-				case "videocard":
-				{
-					ModelDisplayGrid.ColumnDefinitions[8].Width = new GridLength(1, GridUnitType.Star);
-					break;
-				}
-			}
-		}
-
-		public AddEditElementWindow(ElementWindowAction action, string modelType, IModelEditor viewModel) : this(action, modelType)
+		public AddEditRuleWindow(ElementWindowAction action, IModelEditor viewModel) : this(action)
 		{
 			DataContext = viewModel;
 			_viewModel = viewModel;
 			_viewModel.OnUnsavedChangesClose += OnViewModelUnsavedChangesCloseAttempt;
 			_viewModel.OnModelEditClosed += OnViewModelEditorClosed;
+		}
+
+		public AddEditRuleWindow(ElementWindowAction action, IModelEditor viewModel, string[] relations, 
+			Tuple<string, string>[] firstComponentDescription, Tuple<string, string>[] secondComponentDescription) : this(action, viewModel)
+		{
+			_relations = relations;
+			_firstComponentDescription = firstComponentDescription;
+			_secondComponentDescription = secondComponentDescription;
+
+			FirstComponentProperties.ItemsSource = _firstComponentDescription;
+			SecondComponentProperties.ItemsSource = _secondComponentDescription;
+			Relations.ItemsSource = _relations;
 		}
 
 		private void OnViewModelEditorClosed()

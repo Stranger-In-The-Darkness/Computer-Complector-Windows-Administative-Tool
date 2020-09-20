@@ -55,7 +55,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="AddEditRuleWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="AddEditElementWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditPropertyWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -67,12 +75,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="AddEditRuleWindow.xaml.cs">
+      <DependentUpon>AddEditRuleWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AddEditElementWindow.xaml.cs">
       <DependentUpon>AddEditElementWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\ArrayToSymbolSeparatedStringConverter.cs" />
+    <Compile Include="Converters\ArrayElementAtIndexConverter.cs" />
+    <Compile Include="Converters\ListGenericToSymbolSeparatedStringConverter.cs" />
+    <Compile Include="Converters\NumericAddSubtractConverter.cs" />
+    <Compile Include="EditPropertyWindow.xaml.cs">
+      <DependentUpon>EditPropertyWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
@@ -159,6 +177,21 @@
       <Project>{736e027b-6558-41ea-9c58-963c9f2162d6}</Project>
       <Name>ViewModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Create.png" />
+    <Resource Include="Resources\Images\Delete.png" />
+    <Resource Include="Resources\Images\Edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\CreateBlack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\DeleteBlack.png" />
+    <Resource Include="Resources\Images\EditBlack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\RestoreWindowIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
